@@ -1,0 +1,40 @@
+﻿ body {
+        font-family: Verdana;
+        font-size: 14px;
+        }
+    table {border: 1px solid black;}
+    th, td.SumHead {
+        background: #FFFFFF;
+        border: 1px solid #B0B0B0;
+        font-weight: bold;
+        padding: 3px 10px;
+        text-align: center;
+        }
+        th#time {width:200px;}
+        th#return {width:302px;}
+        th#display {width:205px;}
+        th#valid {width:100px;}
+        th#duration {width:100px;}
+    td {
+        padding: 3px 5px;
+        text-align: center;
+        }
+        td#SumHead {column-span:all;
+                    text-align:left;
+        }
+    tr:nth-child(even) {
+        background: #99CCFF;
+        }
+    tr:nth-child(odd) {
+        background: #CCFFFF;
+        }
+    #SummaryTable tr {background: #ffffff;}
+        #SummaryTable td:nth-child(odd) {text-align:right;}
+        #SummaryTable td:nth-child(even) {text-align:left;}
+        #SummaryTable td:nth-child(1) {width: 105px;}
+        #SummaryTable td:nth-child(2) {width: 200px;}
+        #SummaryTable td:nth-child(3) {width: 90px;}
+        #SummaryTable td:nth-child(4) {width: 200px;}
+        #SummaryTable td:nth-child(5) {width: 130px;}
+        #SummaryTable td:nth-child(6) {width: 230px;}
+        
