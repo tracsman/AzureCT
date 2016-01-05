@@ -217,7 +217,7 @@ Write-Host "ms, Maximum = " -NoNewline
 Write-Host $PingMax -NoNewline
 Write-Host "ms, Average = " -NoNewline
 Write-Host $PingAvg -NoNewline
-Write-Host "ms" -NoNewline
+Write-Host "ms"
 Write-Host 
 
 # 7. Update Job Header xml in local file
