@@ -16,14 +16,7 @@ This tool has some perquisites to be in place before using this tool:
 2. On a newly built Windows VM in Azure:
 	1. Copy the IISBuild.ps1 script from the ServerSide folder to the Azure VM.
 	2. Open an elevated PowerShell prompt on the Azure VM.
-	3. Run the IISBuild.ps1 to turn on ping, install IIS, and create some application files. This step will create seven files on the server:
-		- Home.aspx
-		- WebTest.aspx
-		- Upload.aspx
-		- ClearHistory.aspx
-		- Web.Config
-		- JobHeader.xml
-		- JobDetail.xml 
+	3. Run the IISBuild.ps1 to turn on ping, install IIS and .Net 4.5, and copy some application files from GitHub. If any errors occur with the file copies, or your server doesn't have access to the Internet, the files can be manually copied from the ServerSide directory of this GitHub. 
 3. Note the local IP address of the Azure VM.
 	- From PowerShell run: `(Get-NetIPAddress).IPv4Address`
 	- Copy the first IP address, this should be the VNet IP address for your server. Note: it's not the 127.0.0.1 address.
