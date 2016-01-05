@@ -126,11 +126,13 @@ None
 4. Test Name:  **WebPing Duration 1 Minute**
 
 	**Execution Steps**
+	
 	1. From PowerShell (not elevated) on the Client PC.
 	2. Navigate to the directory where the PowerShell scripts where saved in Test 1
 	3. Execute the following: `.\WebPing.ps1 -RemoteHost X.X.X.X -Duration 1` where x.x.x.x is the private IP Address of the Azure VM.
 
 	**Expected Results**
+	
 	1. Script should default to DurationInterval = Minutes, this without the DurationInterval option specifically called, and the Duration set to 1, the Script should run for 1 minute.
 	2. Many ! will show (around 50), each aproximately one second apart.
 	3. An end summary message will show statistics for the overall WebPing run.
@@ -141,22 +143,26 @@ None
 5. Test Name:  **WebPing Timeout 1 Second**
 
 	**Execution Steps**
+	
 	1. From PowerShell (not elevated) on the Client PC.
 	2. Navigate to the directory where the PowerShell scripts where saved in Test 1
 	3. Execute the following: `.\WebPing.ps1 -RemoteHost X.X.X.X -Duration 5 -DurationInterval Seconds -TimeoutSeconds 1` where X.X.X.X is the IP address of the Azure VM.
 
 	**Expected Results**
+	
 	1. WebPing will run.
 	2. Final entry in the DiagJobHeader.xml in the %temp% directory of the local Client PC will show a the following value `<TimeoutSeconds>1</TimeoutSeconds>`
 
 6. Test Name:  **WebPing Bad IP / Timeout Errors**
 
 	**Execution Steps**
+	
 	1. From PowerShell (not elevated) on the Client PC.
 	2. Navigate to the directory where the PowerShell scripts where saved in Test 1
 	3. Execute the following: `.\WebPing.ps1 -RemoteHost Y.Y.Y.Y -Duration 5 -DurationInterval Seconds` where y.y.y.y is an unused IP Address (ie Not the IP address of the Azure VM).
 
 	**Expected Results**
+	
 	1. Script should run, but pause for 2 seconds (the default timeout setting)
 	2. A single . will be displayed.
 	3. An end summary message will show statistics for the overall WebPing run, which should indicate 1 lost ping and all round trip times at 0ms.
