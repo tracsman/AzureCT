@@ -66,11 +66,13 @@ None
 	3. Download all files in the PowerShell directory to a directory on the local Client PC
 
 	**Expected Results**
+	
 	1. Files from the PowerShell directory on GitHub are on the local PC.
 
 2. Test Name: **Run Server Setup Script**
 
 	**Execution Steps**
+	
 	1. Copy the contents of the BuildIIS.ps1 script from the ServerSide folder on GitHub to the clipboard of the local Client PC.
 	2. Open the Azure Management Portal and identify the local IP of the Azure VM created in step 7 of the "Build Initial Environment" section, here after called the "Azure VM".
 	2. From a command prompt on the local Client PC, run the command "mstsc".
@@ -82,6 +84,7 @@ None
 	8. At the PowerShell prompt run the script file created in step 6.
 
 	**Expected Results**
+	
 	1. Script will run, with no error notifications.
 	2. IIS will be installed (Look for a C:\inetpub directory).
 	3. All ServerSide files will be resisdent in the c:\inetpub\wwwroot directory.
@@ -90,23 +93,27 @@ None
 2. Test Name: **Run Server Setup Script with Errors**
 
 	**Execution Steps**
+	
 	1. Log on to the Azure VM.
 	2. Edit one of the file names in BuildIIS.ps1 (on the desktop) to a non-existant file.
 	3. Open an elevated PowerShell prompt.
 	4. Run the BuildIIS.ps1 script
 
 	**Expected Results**
+	
 	1. Script will run, with one error message
 	2. Bad file name should be mentioned in red with instructions to manually copy the file.
 
 3. Test Name:  **WebPing Duration 5 Seconds**
 
 	**Execution Steps**
+	
 	1. Blah
 	2. Bloo
 	3. Blee
 
 	**Expected Results**
+	
 	1. Blah
 	2. Blue
 	3. Blee
