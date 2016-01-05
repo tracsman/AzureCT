@@ -135,10 +135,6 @@ None
 	
 	1. Script should default to DurationInterval = Minutes, this without the DurationInterval option specifically called, and the Duration set to 1, the Script should run for 1 minute.
 	2. Many ! will show (around 50), each aproximately one second apart.
-	3. An end summary message will show statistics for the overall WebPing run.
-	4. A final message will indicate that the data was uploaded to the server.
-	5. Data for the run will be in two xml files, DiagJobDetail.xml and DiagJobHeader.xml, in the %temp% directory of the local Client PC.
-	6. Data will also be added to the xml files, DiagJobDetail.xml and DiagJobHeader.xml, in the c:\inetpub\wwwroot directory of the Azure VM.
 
 5. Test Name:  **WebPing Timeout 1 Second**
 
@@ -163,12 +159,9 @@ None
 
 	**Expected Results**
 	
-	1. Script should run, but pause for 2 seconds (the default timeout setting)
-	2. A single . will be displayed.
-	3. An end summary message will show statistics for the overall WebPing run, which should indicate 1 lost ping and all round trip times at 0ms.
-	4. A final message will indicate that the data was uploaded to the server.
-	5. Data for the run will be in two xml files, DiagJobDetail.xml and DiagJobHeader.xml, in the %temp% directory of the local Client PC.
-	6. Data will also be added to the xml files, DiagJobDetail.xml and DiagJobHeader.xml, in the c:\inetpub\wwwroot directory of the Azure VM.
+	1. Script should run, but pause for 2 seconds (the default timeout setting) between each run.
+	2. Two . will be displayed.
+	3. An end summary message will show statistics for the overall WebPing run, which should indicate 2 lost pings and all round trip times at 0ms.
 
 7. Test Name:  **WebPing Bad Test Page / Bad Page Data**
 
