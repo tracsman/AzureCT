@@ -31,20 +31,21 @@ None
 ## Tests
 ### Test to Run
 1. Download Files from GitHub
-2. Setup Azure Server
-3. WebPing Duration 5 Seconds
-4. WebPing Duration 1 Minute
-5. WebPing Timeout 1 Second
-6. WebPing Bad IP / Timeout Errors
-7. WebPing Bad Test Page / Bad Page Data
-8. WebPing Bad IP
-9. WebPing all defaults
-10. Review Results on Index.html
-11. Show Results
-12. Show Results with bad remote host
-13. Clear History
-14. Show Results with no XML data
-15. Clear History with bad remote host
+2. Run Server Setup Script
+3. Run Server Setup Script with Errors
+4. WebPing Duration 5 Seconds
+5. WebPing Duration 1 Minute
+6. WebPing Timeout 1 Second
+7. WebPing Bad IP / Timeout Errors
+8. WebPing Bad Test Page / Bad Page Data
+9. WebPing Bad IP
+10. WebPing all defaults
+11. Review Results on Index.html
+12. Show Results
+13. Show Results with bad remote host
+14. Clear History
+15. Show Results with no XML data
+16. Clear History with bad remote host
 
 ### Build Initial Environment
 1. Clear GitHub, PowerShell, and XML files from Client PC
@@ -60,26 +61,43 @@ None
 1. Download Files from GitHub
 
 	**Execution Steps**
-	1. Blah
-	2. Bloo
-	3. Blee
+	1. Clear any old script files from local Client PC
+	2. Navigate to https://github.com/tracsman/HybridTool/tree/master/PowerShell
+	3. Download all files in the PowerShell directory to a directory on the local Client PC
 
 	**Expected Results**
-	1. Blah
-	2. Blue
-	3. Blee
+	1. Files from the PowerShell directory on GitHub are on the local PC.
 
-2. Test Name: **Setup Azure Server**
+2. Test Name: **Run Server Setup Script**
 
 	**Execution Steps**
-	1. Blah
-	2. Bloo
-	3. Blee
+	1. Copy the contents of the BuildIIS.ps1 script from the ServerSide folder on GitHub to the clipboard of the local Client PC.
+	2. Open the Azure Management Portal and identify the local IP of the Azure VM created in step 7 of the "Build Initial Environment" section, here after called the "Azure VM".
+	2. From a command prompt on the local Client PC, run the command "mstsc".
+	3. Enter the IP Address of the Azure VM.
+	4. Logon using the Admin credential of the Azure VM.
+	5. Create a text file on the Azure VM desktop called BuildIIS.ps1
+	6. Paste in the contents of the BuildIIS.ps1 file copied in step 1.
+	7. In the Azure VM open an elevated PowerShell window (ie Run as Administrator)
+	8. At the PowerShell prompt run the script file created in step 6.
 
 	**Expected Results**
-	1. Blah
-	2. Blue
-	3. Blee
+	1. Script will run, with no error notifications.
+	2. IIS will be installed (Look for a C:\inetpub directory).
+	3. All ServerSide files will be resisdent in the c:\inetpub\wwwroot directory.
+	4. On the Client PC, a web broswer can successfully hit http://AzureVM_IP (page should resolve with no data)
+
+2. Test Name: **Run Server Setup Script with Errors**
+
+	**Execution Steps**
+	1. Log on to the Azure VM.
+	2. Edit one of the file names in BuildIIS.ps1 (on the desktop) to a non-existant file.
+	3. Open an elevated PowerShell prompt.
+	4. Run the BuildIIS.ps1 script
+
+	**Expected Results**
+	1. Script will run, with one error message
+	2. Bad file name should be mentioned in red with instructions to manually copy the file.
 
 3. Test Name:  **WebPing Duration 5 Seconds**
 
