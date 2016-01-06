@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Jobs version="1.4">
+<Jobs version="1.5">
   <Job>
     <ID>
     </ID>
@@ -19,65 +19,5 @@
     </PingMax>
     <PingAvg>
     </PingAvg>
-  </Job>
-  <Job>
-    <ID>1</ID>
-    <StartTime>2015-09-07T13:01:20</StartTime>
-    <EndTime>2015-12-07T13:01:25</EndTime>
-    <Target>10.249.172.53</Target>
-    <TimeoutSeconds>4</TimeoutSeconds>
-    <PingCount>4</PingCount>
-    <SuccessRate>100.00</SuccessRate>
-    <PingMin>42</PingMin>
-    <PingMax>339</PingMax>
-    <PingAvg>136</PingAvg>
-  </Job>
-  <Job>
-    <ID>2</ID>
-    <StartTime>2015-12-07T15:29:44</StartTime>
-    <EndTime>2015-12-07T15:29:54</EndTime>
-    <Target>10.249.172.53</Target>
-    <TimeoutSeconds>4</TimeoutSeconds>
-    <PingCount>8</PingCount>
-    <SuccessRate>100.00</SuccessRate>
-    <PingMin>41</PingMin>
-    <PingMax>467</PingMax>
-    <PingAvg>103</PingAvg>
-  </Job>
-  <Job>
-    <ID>3</ID>
-    <StartTime>2015-12-07T15:30:00</StartTime>
-    <EndTime>2015-12-07T15:30:10</EndTime>
-    <Target>10.249.172.57</Target>
-    <TimeoutSeconds>4</TimeoutSeconds>
-    <PingCount>2</PingCount>
-    <SuccessRate>0.00</SuccessRate>
-    <PingMin>0</PingMin>
-    <PingMax>0</PingMax>
-    <PingAvg>0</PingAvg>
-  </Job>
-  <Job>
-    <ID>4</ID>
-    <StartTime>2015-12-07T15:30:23</StartTime>
-    <EndTime>2015-12-07T15:30:33</EndTime>
-    <Target>10.249.172.53</Target>
-    <TimeoutSeconds>2</TimeoutSeconds>
-    <PingCount>8</PingCount>
-    <SuccessRate>100.00</SuccessRate>
-    <PingMin>37</PingMin>
-    <PingMax>344</PingMax>
-    <PingAvg>87</PingAvg>
-  </Job>
-  <Job>
-    <ID>5</ID>
-    <StartTime>2015-12-07T15:31:51</StartTime>
-    <EndTime>2015-12-07T15:32:01</EndTime>
-    <Target>10.249.172.53</Target>
-    <TimeoutSeconds>2</TimeoutSeconds>
-    <PingCount>9</PingCount>
-    <SuccessRate>100.00</SuccessRate>
-    <PingMin>42</PingMin>
-    <PingMax>89</PingMax>
-    <PingAvg>59</PingAvg>
   </Job>
 </Jobs>
