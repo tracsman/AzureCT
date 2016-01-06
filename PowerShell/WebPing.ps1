@@ -231,10 +231,12 @@ $JobHeaderFile.Save("$FilePath\DiagJobHeader.xml")
 Return
 # 8. Upload Header and deatails xml to web server
 
-$uri = "http://localhost:26647/Upload.aspx"
+$uri = "http://localhost:33095/Upload.aspx"
 $contentType = "multipart/form-data"
-Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobHeaderFile.OuterXml
-
+$header = @{FileID = "Header"}
+Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobHeaderFile.OuterXml -Headers $header
+$header = @{FileID = "Detail"}
+Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobDetailFile.OuterXml -Headers $header
 
 # 9. Spawn local web browser showing report details from server
 Start-Process -FilePath "http://$RemoteHost/index.html"
