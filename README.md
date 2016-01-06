@@ -1,15 +1,14 @@
-# HybridTool
-Azure Hybrid Availability Tool
+# Azure Hybrid Availability Tool
 
 ## Overview
-This tool displays availability statistics for a newly built Windows VM on a Hybrid connected Network.
+This tool collects, stores, and displays availability statistics for a newly built Windows VM on a Hybrid connected Network.
 
 ## Tool Usage
 ### Prerequisites
-This tool has some perquisites to be in place before using this tool:
-- Hybrid Network in Azure (either VPN or ExpressRoute)
-- A New Windows VM on the Azure network reachable from the on-prem network
-- A client PC running PowerShell 3.0 or greater on the on-prem side
+This tool has some perquisites that must be in place before using this tool:
+- Hybrid Network in Azure (either VPN or ExpressRoute) connected to a remote (usually "on-prem") network
+- A New Azure VM, running Windows Server 2012 or greater, on the Azure network reachable from the on-prem network
+- A client PC running PowerShell 3.0 or greater on the on-prem network that can reach the Azure VM
 
 ### Installation Instructions
 1. Download the Github folders to your local client PC
@@ -67,10 +66,10 @@ There are two other commandlets that can be run:
 - Show-Results.ps1
 
 Both commandlets have a single input parameter:
-- **RemoteHost** - This is required and is the local IP Address copied in step 1 of the Installation Instructions above.
+- **RemoteHost** - This parameter is required for Show-Results and optional for Clear-History, for both commandlets this parameter is the IP Address of the Azure VM copied in step 1 of the Installation Instructions above.
 
 #### Clear-History.ps1
-This commandlet will delete the WebPing xml files on both the local PC and the remote Azure VM.
+This commandlet will delete any WebPing data on both the local PC and the remote Azure VM (if the server IP is provided).
 
 #### Show-Results.ps1
-This commandlet will open a web browser on the local Client PC to display the WebPing xml data saved to the remote Azure VM. 
+This commandlet will open a web browser on the local Client PC to display the WebPing data saved to the remote Azure VM. 
