@@ -18,7 +18,7 @@ ClearHistory
 
  #>
 Param(
-   # [ipaddress]$RemoteHost = 'localhost:1669'
+   [Parameter(ValueFromPipeline=$true)]
    [string]$RemoteHost = ''
 )
 write-host
