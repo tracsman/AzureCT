@@ -34,7 +34,7 @@ if ($theAnswer -ne "Y") {
 
 # Clear remote data if address provided.
 if ($RemoteHost -eq '') {
-    Write-Host "No host address was provided, no remote data was cleared."
+    Write-Host "No remote address was provided, no remote data was cleared."
     }
 else {
     Write-Host "Clearing WebPing history from the remote server." -ForegroundColor Cyan
@@ -44,7 +44,7 @@ else {
         Write-Host "All WebPing history was cleared from the remote server." -ForegroundColor Green
         }
      else {
-        Write-Host "Warning: WebPing history was not cleared from the web server." -ForegroundColor Red
+        Write-Host "Warning: An error occured and WebPing history may not have been cleared from the remote server." -ForegroundColor Red
         }
     }
 

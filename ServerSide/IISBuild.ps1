@@ -1,5 +1,9 @@
 ﻿# IIS Server Post Build Config Script
+
 # Must be run from an elevated PS prompt!
+    If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+        Write-Warning "This script must be run As Administrator, please open a new PowerShell prompt using the Run As Administrator option and re-run this script."
+        Break}
 
 # Turn On ICMPv4
     Write-Host
@@ -16,16 +20,16 @@
     $FileName = @()
     
     # Stuff Arrays with Github URL and local file path
-    $FileName += "DisplayPing.html"
-    $FileName += "DisplayPing.css"
-    $FileName += "DisplayPing.js"
-    $FileName += "jquery.js"
-    $FileName += "Web.config"
+    $FileName += "ClearHistory.aspx"
     $FileName += "DiagJobDetail.xml"
     $FileName += "DiagJobHeader.xml"
-    $FileName += "UploadHeader.aspx"
-    $FileName += "UploadDetail.aspx"
-    $FileName += "ClearHistory.aspx"
+    $FileName += "DisplayPing.css"
+    $FileName += "DisplayPing.html"
+    $FileName += "DisplayPing.js"
+    $FileName += "jquery.js"
+    $FileName += "Upload.aspx"
+    $FileName += "Web.config"
+    $FileName += "WebTest.aspx"
 
     # Loop through the arrays and pull files from GitHub to the Server
     Write-Host
@@ -33,7 +37,7 @@
     Write-Host "Coping files from the 'ServerSide' directory on GitHub to the local 'c:\inetpub\wwwroot\' directory."
     $Issues = $false
     $i=0
-    $URL | ForEach{
+    $FileName | ForEach{
         Try {
             $webClient = new-object System.Net.WebClient
             $webClient.DownloadFile( "https://raw.githubusercontent.com/tracsman/HybridTool/master/ServerSide/" + $FileName[$i], "c:\inetpub\wwwroot\" + $FileName[$i] )
@@ -41,11 +45,36 @@
         }
         Catch {
             $Issues = $true
-            Write-Host "Download Error:" $FileName[$i] "was not downloaded. Copy this file manually, or rerun this script." -ForegroundColor Red}
+            Write-Warning "Download Error:" $FileName[$i] "was not downloaded. Copy this file manually, or rerun this script."}
         $i++
     }
+# Update File Permmisions to Allow writing access on XML files
+    # Create Arrays
+    $FileName = @()
 
+    # Stuff Arrays with XML files
+    $FileName += "C:\inetpub\wwwroot\DiagJobHeader.xml"
+    $FileName += "C:\inetpub\wwwroot\DiagJobDetail.xml"
+
+    # Loop Through
+    $i=0
+    $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("IIS_IUSRS", "FullControl", "Allow")
+    $FileName | ForEach {
+        Try {
+            $acl = Get-Acl $FileName[$i]
+            $acl.SetAccessRule($ar)
+            Set-Acl $FileName[$i] $Acl}
+        Catch {
+            $Issues = $true
+            Write-Warning "An error occured applying write ACLs to the $FileName[$i] file."
+            Write-Warning "Rerun this command or you can manualy apply 'Full Control' permissions to the IIS_IUSRS account on the xml file in the 'c:\inetpub\www\' directory."}
+        $i++
+        }
+# Say our good-byes and close up shop
     Write-Host
-    If ($Issues) {Write-Host "Issues encountered, please see statement above in red for details!" -ForegroundColor Red}
+    If ($Issues) {
+        Write-Warning "Issues encountered, please see statement(s) above in red for details!"
+        Write-Warning "Ensure that the PowerShell prompt is being run as administrator."
+        }
     Else {Write-Host "Web App Creation Successfull!" -ForegroundColor Green}
     Write-Host

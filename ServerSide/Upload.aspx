@@ -1,13 +1,12 @@
 ﻿<%@ Page Language="VB" %>
 <%@ Import Namespace="System.XML" %>
-
 <%
     Dim myResult As String = "Bad"
     Dim strFileID As String
     Dim strXMLNode As String
     Dim strFileCurrent As String
-    Dim strFileHeader As String = "C:\inetpub\DiagJobHeader.xml"
-    Dim strFileDetail As String = "C:\inetpub\DiagJobDetail.xml"
+    Dim strFileHeader As String = "DiagJobHeader.xml"
+    Dim strFileDetail As String = "DiagJobDetail.xml"
 
     Dim xmlOutput As XmlDocument
     Dim xmlInput As XmlDocument
@@ -18,14 +17,14 @@
 
         If strFileID = "Header" Or strFileID = "Detail" Then
             If strFileID = "Header" Then
-                strFileCurrent = strFileHeader
+                strFileCurrent = HttpContext.Current.Server.MapPath(".\" & strFileHeader)
                 strXMLNode = ".//Jobs/Job"
             Else
-                strFileCurrent = strFileDetail
+                strFileCurrent =HttpContext.Current.Server.MapPath(".\" & strFileDetail)
                 strXMLNode = ".//JobRecords/JobRecord"
             End If
             xmlInput = New XmlDocument
-            xmlInput.Load(Request.InputStream)
+            xmlInput.Load(Request.InputStream)			
             xmlOutput = New XmlDocument
             xmlOutput.Load(strFileCurrent)
 

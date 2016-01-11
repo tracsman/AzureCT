@@ -34,11 +34,11 @@ Param(
    # [ipaddress]$RemoteHost = '192.168.0.215', # Remove default IP address for production
    # [ipaddress]$RemoteHost = '10.249.172.53', # Remove default IP address for production
 
-   [Parameter(ValueFromPipeline=$true, Mandatory=$true)]
-   [ipaddress]$RemoteHost,
-   [int]$Duration=0,
+   #[Parameter(ValueFromPipeline=$true, Mandatory=$true)]
+   [ipaddress]$RemoteHost= '10.249.172.53',
+   [int]$Duration=5,
    [ValidateSet("Seconds","Minutes")] 
-   [string]$DurationInterval="Minutes",
+   [string]$DurationInterval="Seconds",
    [int]$TimeoutSeconds=2
 )
 
@@ -228,10 +228,12 @@ Catch {
 }
 
 Write-Host
-If ($HeaderUploadResponse -eq "Good" -and $DetailUploadResponse -eq "Good") {
+If ($HeaderUploadResponse.Content -eq "Good" -and $DetailUploadResponse.Content -eq "Good") {
     Write-Host "Data uploaded to remote server sucessfully"} 
 Else {
-    Write-Host "Data upload to remote server failed. Please check to ensure the remote server has all the files required to run this tool." -ForegroundColor Red
+    Write-Warning "Data upload to remote server failed."
+    Write-Warning "Please check to ensure the remote server has all the files required to run this tool."
+    Write-Warning "Also ensure the XML files in the 'c:\inetpub\wwwroot' have 'Full Control' file access for the local IIS_IUSRS account"
     Return
 }
 
@@ -244,9 +246,8 @@ Start-Process -FilePath "http://$RemoteHost"
 Remove-Item "$FilePath\DiagJobHeader.xml"
 Remove-Item "$FilePath\DiagJobDetail.xml" 
 
-Return
-
 # TO DO
 # 1. Check xml schema version, if not current, overwrite
 # 2. Add Help switch and help information
 # 3. Add ending stats if CRTL-C pressed in middle of job
+
