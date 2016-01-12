@@ -27,6 +27,8 @@
     $FileName += "DisplayPing.html"
     $FileName += "DisplayPing.js"
     $FileName += "jquery.js"
+    $FileName += "TemplateJobDetail.xml"
+    $FileName += "TemplateJobHeader.xml"
     $FileName += "Upload.aspx"
     $FileName += "Web.config"
     $FileName += "WebTest.aspx"
@@ -55,6 +57,8 @@
     # Stuff Arrays with XML files
     $FileName += "C:\inetpub\wwwroot\DiagJobHeader.xml"
     $FileName += "C:\inetpub\wwwroot\DiagJobDetail.xml"
+    $FileName += "C:\inetpub\wwwroot\TemplateJobDetail.xml"
+    $FileName += "C:\inetpub\wwwroot\TemplateJobHeader.xml"
 
     # Loop Through
     $i=0

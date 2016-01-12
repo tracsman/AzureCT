@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<JobRecords version="1.5">
+  <JobRecord>
+    <JobID/>
+    <PingID/>
+    <TimeStamp/>
+    <Return/>
+    <Display/>
+    <Valid/>
+    <Duration/>
+  </JobRecord>
+</JobRecords>

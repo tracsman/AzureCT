@@ -53,12 +53,12 @@ If ($Duration -eq 0) {$RunDuration = New-TimeSpan -Days 365}
 
 # Check for Header File
 If ((Test-Path "$FilePath\DiagJobHeader.xml") -eq $false) {
-    [string]$JobHeaderFile = "<?xml version=`"1.0`"?><Jobs version=`"$JobSchemaVersion`"><Job><ID></ID><StartTime></StartTime><EndTime></EndTime><Target></Target><TimeoutSeconds></TimeoutSeconds><PingCount>0</PingCount><SuccessRate>0</SuccessRate><PingMin></PingMin><PingMax></PingMax><PingAvg></PingAvg></Job></Jobs>"
+    [string]$JobHeaderFile = "<?xml version=`"1.0`"?><Jobs version=`"$JobSchemaVersion`"><Job><ID/><StartTime/><EndTime/><Target/><TimeoutSeconds/><PingCount/><SuccessRate/><PingMin/><PingMax/><PingAvg/></Job></Jobs>"
     $JobHeaderFile | Out-File -FilePath "$FilePath\DiagJobHeader.xml" -Encoding ascii}
 
 # Check for Detail File
 If ((Test-Path "$FilePath\DiagJobDetail.xml") -eq $false) {
-    [string]$JobDetailFile = "<?xml version=`"1.0`"?><JobRecords version=`"$JobSchemaVersion`"><JobRecord><JobID></JobID><PingID></PingID><TimeStamp></TimeStamp><Return></Return><Display></Display><Valid></Valid><Duration></Duration></JobRecord></JobRecords>"
+    [string]$JobDetailFile = "<?xml version=`"1.0`"?><JobRecords version=`"$JobSchemaVersion`"><JobRecord><JobID/><PingID/><TimeStamp/><Return/><Display/><Valid/><Duration/></JobRecord></JobRecords>"
     $JobDetailFile | Out-File -FilePath "$FilePath\DiagJobDetail.xml" -Encoding ascii}
 
 [int]$PingCount=0
@@ -228,7 +228,7 @@ Catch {
 }
 
 Write-Host
-If ($HeaderUploadResponse.Content -eq "Good" -and $DetailUploadResponse.Content -eq "Good") {
+If ($HeaderUploadResponse.Content.Trim() -eq "Good" -and $DetailUploadResponse.Content.Trim() -eq "Good") {
     Write-Host "Data uploaded to remote server sucessfully"} 
 Else {
     Write-Warning "Data upload to remote server failed."
