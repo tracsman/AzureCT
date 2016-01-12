@@ -1,23 +1,15 @@
 <?xml version="1.0"?>
 <Jobs version="1.5">
   <Job>
-    <ID>
-    </ID>
-    <StartTime>
-    </StartTime>
-    <EndTime>
-    </EndTime>
-    <Target>
-    </Target>
-    <TimeoutSeconds>
-    </TimeoutSeconds>
-    <PingCount>0</PingCount>
-    <SuccessRate>0</SuccessRate>
-    <PingMin>
-    </PingMin>
-    <PingMax>
-    </PingMax>
-    <PingAvg>
-    </PingAvg>
+    <ID/>
+    <StartTime/>
+    <EndTime/>
+    <Target/>
+    <TimeoutSeconds/>
+    <PingCount/>
+    <SuccessRate/>
+    <PingMin/>
+    <PingMax/>
+    <PingAvg/>
   </Job>
 </Jobs>

@@ -12,7 +12,7 @@ $(document).ready(function(){
         $('Job', xml).each(function (i) {
 
             jobID = $(this).find('ID').text();
-            if (jobID > 0) {
+            if (jobID != "") {
                 jobStart = $(this).find('StartTime').text();
 
                 // Build Option Row for Drop down
@@ -30,7 +30,7 @@ $(document).ready(function(){
 
 function PullJobDetails() {
     // Get the selected Job ID from the drop down 
-    d = document.getElementById("JobList").value;
+    headerJobID = document.getElementById("JobList").value;
     currentStartTime = '';
     currentEndTime = '';
     currentTarget = '';
@@ -55,7 +55,7 @@ function PullJobDetails() {
             jobID = $(this).find('ID').text();
 
             // Pull Job Header info into variables
-            if ((+jobID) == (+d)) {
+            if (jobID == headerJobID) {
                 currentStartTime = $(this).find('StartTime').text();
                 currentEndTime = $(this).find('EndTime').text();
                 currentTarget = $(this).find('Target').text();
@@ -136,7 +136,7 @@ function PullJobDetails() {
         $('JobRecord', xml).each(function (i) {
 
             jobID = $(this).find('JobID').text();
-            if ((+jobID) == (+d)) {
+            if (jobID == headerJobID) {
                 jobTimeStamp = $(this).find('TimeStamp').text();
                 jobPingID = $(this).find('PingID').text();
                 jobReturn = $(this).find('Return').text();

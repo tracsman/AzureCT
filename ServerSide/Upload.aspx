@@ -20,11 +20,11 @@
                 strFileCurrent = HttpContext.Current.Server.MapPath(".\" & strFileHeader)
                 strXMLNode = ".//Jobs/Job"
             Else
-                strFileCurrent =HttpContext.Current.Server.MapPath(".\" & strFileDetail)
+                strFileCurrent = HttpContext.Current.Server.MapPath(".\" & strFileDetail)
                 strXMLNode = ".//JobRecords/JobRecord"
             End If
             xmlInput = New XmlDocument
-            xmlInput.Load(Request.InputStream)			
+            xmlInput.Load(Request.InputStream)
             xmlOutput = New XmlDocument
             xmlOutput.Load(strFileCurrent)
 
