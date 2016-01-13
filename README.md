@@ -3,7 +3,7 @@
 # <font color="red">This work is pre-release!<br/>It's close, but still a work in progress!</font>
 
 ## Overview
-This collection of server side web pages and local PowerShell scripts will generate, collect, store, and display availability statistics for a newly built Windows VM on a Hybrid connected Network.
+This collection of server side web pages and local PowerShell scripts will generate, collect, store, and display availability statistics of the network between you and a newly built Windows VM on a Hybrid connected Network.
 
 Is it designed to provide an indication, over time, of the link between an application server in Azure and an on-premise or remote network. The focus is on network performance, however the test is done from a PC client to an IIS server in Azure, thus providing a comprehensive view into total availability, not just a single point or compontent in the complex chain that makes up a hybrid network. This hope is that this will provide insight into the end-to-end network availability.
 
