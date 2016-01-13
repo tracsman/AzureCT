@@ -30,16 +30,12 @@
 
 # 1. Evaluate and Set input parameters
 Param(
-   
-   # [ipaddress]$RemoteHost = '192.168.0.215', # Remove default IP address for production
-   # [ipaddress]$RemoteHost = '10.249.172.53', # Remove default IP address for production
-
-   #[Parameter(ValueFromPipeline=$true, Mandatory=$true)]
-   [ipaddress]$RemoteHost= '10.249.172.53',
+   [Parameter(ValueFromPipeline=$true, Mandatory=$true)]
+   [ipaddress]$RemoteHost,
    [int]$Duration=5,
    [ValidateSet("Seconds","Minutes")] 
    [string]$DurationInterval="Seconds",
-   [int]$TimeoutSeconds=2
+   [int]$TimeoutSeconds=4
 )
 
 # 2. Initialize
