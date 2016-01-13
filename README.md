@@ -8,6 +8,7 @@ This collection of server side web pages and local PowerShell scripts will gener
 Is it designed to provide an indication, over time, of the link between an application server in Azure and an on-premise or remote network. The focus is on network performance, however the test is done from a PC client to an IIS server in Azure, thus providing a comprehensive view into total availability, not just a single point or compontent in the complex chain that makes up a hybrid network. This hope is that this will provide insight into the end-to-end network availability.
 
 This tool **does not** provide rich insight if a problem is encountered during a test, over time this tool may improve but this initial release only reflects the statistics around availability seen while an active test is running.
+![HAT Diagram](HAT.png)
 
 ## Tool Usage
 ### Prerequisites
