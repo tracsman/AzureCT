@@ -12,14 +12,14 @@
 
 # Install IIS
     Write-Host
-    Write-Host "Installing IIS and .Net 4.5, this can take some time, like 15+ minutes..." -ForegroundColor Cyan
+    Write-Host "Installing IIS and .Net 4.5, this can take some time (up to 15+ minutes)..." -ForegroundColor Cyan
     add-windowsfeature Web-Server, Web-WebServer, Web-Common-Http, Web-Default-Doc, Web-Dir-Browsing, Web-Http-Errors, Web-Static-Content, Web-Health, Web-Http-Logging, Web-Performance, Web-Stat-Compression, Web-Security, Web-Filtering, Web-App-Dev, Web-ISAPI-Ext, Web-ISAPI-Filter, Web-Net-Ext, Web-Net-Ext45, Web-Asp-Net45, Web-Mgmt-Tools, Web-Mgmt-Console
 
 # Create Web App Pages
-    # Create Arrays
+    # Create FileName Array
     $FileName = @()
     
-    # Stuff Arrays with Github URL and local file path
+    # Stuff Array with FileNames
     $FileName += "ClearHistory.aspx"
     $FileName += "DiagJobDetail.xml"
     $FileName += "DiagJobHeader.xml"
@@ -33,7 +33,7 @@
     $FileName += "Web.config"
     $FileName += "WebTest.aspx"
 
-    # Loop through the arrays and pull files from GitHub to the Server
+    # Loop through the array and pull files from GitHub to the Server
     Write-Host
     Write-Host "Pulling Web pages from GitHub" -ForegroundColor Cyan
     Write-Host "Coping files from the 'ServerSide' directory on GitHub to the local 'c:\inetpub\wwwroot\' directory."
@@ -51,16 +51,16 @@
         $i++
     }
 # Update File Permmisions to Allow writing access on XML files
-    # Create Arrays
+    # Create Array
     $FileName = @()
 
-    # Stuff Arrays with XML files
+    # Stuff Array with XML files
     $FileName += "C:\inetpub\wwwroot\DiagJobHeader.xml"
     $FileName += "C:\inetpub\wwwroot\DiagJobDetail.xml"
     $FileName += "C:\inetpub\wwwroot\TemplateJobDetail.xml"
     $FileName += "C:\inetpub\wwwroot\TemplateJobHeader.xml"
 
-    # Loop Through
+    # Loop through array and set file permissions
     $i=0
     $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("IIS_IUSRS", "FullControl", "Allow")
     $FileName | ForEach {
@@ -78,7 +78,6 @@
     Write-Host
     If ($Issues) {
         Write-Warning "Issues encountered, please see statement(s) above in red for details!"
-        Write-Warning "Ensure that the PowerShell prompt is being run as administrator."
         }
     Else {Write-Host "Web App Creation Successfull!" -ForegroundColor Green}
     Write-Host

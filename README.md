@@ -1,13 +1,13 @@
 # Azure Hybrid Availability Tool
 
-# <font color="red">This work is pre-release! It's close, but still a work in progress!</font>
+# <font color="red">This work is pre-release!<br/>It's close, but still a work in progress!</font>
 
 ## Overview
 This collection of server side web pages and local PowerShell scripts will generate, collect, store, and display availability statistics for a newly built Windows VM on a Hybrid connected Network.
 
 Is it designed to provide an indication, over time, of the link between an application server in Azure and an on-premise or remote network. The focus is on network performance, however the test is done from a PC client to an IIS server in Azure, thus providing a comprehensive view into total availability, not just a single point or compontent in the complex chain that makes up a hybrid network. This hope is that this will provide insight into the end-to-end network availability.
 
-This tool **does not** provide rich insight if a problem is encountered during a test, over time this tool may improve but in this initial release only reflects the statistics around availability seen while an active test is running.
+This tool **does not** provide rich insight if a problem is encountered during a test, over time this tool may improve but this initial release only reflects the statistics around availability seen while an active test is running.
 
 ## Tool Usage
 ### Prerequisites
@@ -83,8 +83,8 @@ This commandlet will delete any WebPing data on both the local PC and the remote
 #### Show-Results.ps1
 This commandlet will open a web browser on the local Client PC to display the WebPing data saved to the remote Azure VM.
 
-## After Testing
-Once testing is complete the Azure VM should be deleted to avoid unnecessary Azure usage (and associated charges), and all local files can be deleted. There is nothing permanently installed, only files copied from GitHub and potentially the two XML files in the Local Client PC. 
+### Removing the Hybrid Availability Tool
+Once testing is complete the Azure VM should be deleted to avoid unnecessary Azure usage (and associated charges) and all local files can be deleted. There is nothing permanently installed, only files copied from GitHub and potentially the two XML files in the Local Client PC. 
 
 To ensure 100% removal of all artifacts from this tool perform the following steps:
 
@@ -92,4 +92,16 @@ To ensure 100% removal of all artifacts from this tool perform the following ste
 2. Delete all files on the local Client PC copied from GitHub
 3. Delete the Azure VM
 
+## History
+2016-01-xx - Initial release, version 1.0.
 
+## To Do (Backlog)
+
+1. (WebPing.ps1) Check XML schema version, if not current, overwrite
+2. (WebPing.ps1) Add Help switch and help information
+3. (WebPing.ps1) Add ending stats if CRTL-C pressed in middle of job
+4. (WebDiag.ps1) Net new commandlet, if WebPing fails, a simple troubleshooter
+5. (DisplayPing.html) Make it prettier
+
+## License
+This tool incorporates [JQuery](https://jquery.org/license/ "JQuery License") for XML manipulation and is included in the ServerSide files. JQuery is included and used under the requirements of the MIT License, and in compliance with the main proviso "*You are free to use any jQuery Foundation project in any other project (even commercial projects) as long as the copyright header is left intact.*"

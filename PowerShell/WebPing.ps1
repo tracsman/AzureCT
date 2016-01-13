@@ -23,7 +23,7 @@
 # 5.5 Repeat
 # 6. Calculate end of job stats
 # 7. Update Job Header xml in local file
-# 8. Upload Header and deatails xml to web server
+# 8. Upload Header and Detail xml to server
 # 9. Spawn local web browser showing report details from server
 #10. Close and Clean Up
 #
@@ -107,13 +107,7 @@ Do {
 
     Try {
         $PingDuration = Measure-Command {$WebPing = (Invoke-WebRequest -Uri http://$RemoteHost/WebTest.aspx -TimeoutSec $TimeoutSeconds)}
-        
-        #$PingDuration = Measure-Command {$WebPing = (Invoke-WebRequest -Uri http://192.168.0.215/WebTest.aspx -TimeoutSec $TimeoutSeconds)}           # No Error, Good Data
-        #$PingDuration = Measure-Command {$WebPing = (Invoke-WebRequest -Uri http://192.168.0.215 -TimeoutSec $TimeoutSeconds)}                        # No Error, Bad Data (No Data)
-        #$PingDuration = Measure-Command {$WebPing = (Invoke-WebRequest -Uri http://tracsman.azurewebsites.net/home.html -TimeoutSec $TimeoutSeconds)} # No Error, Bad Data (With Data)
-        #$PingDuration = Measure-Command {$WebPing = (Invoke-WebRequest -Uri http://192.168.0.216/WebTest.aspx -TimeoutSec $TimeoutSeconds)}           # Error, Timeout
-        #$PingDuration = Measure-Command {$WebPing = (Invoke-WebRequest -Uri http://192.168.0.215/WebTest2.aspx -TimeoutSec $TimeoutSeconds)}          # Error, 404 (Else)
-        
+
         # Pull server data from the test
         $ServerTime = ($WebPing.AllElements | ? {$_.tagName -eq 'HEAD'}).innerText
         $Result = ($WebPing.AllElements | ? {$_.tagName -eq 'BODY'}).innerText
@@ -172,7 +166,6 @@ Do {
     Write-Host $PingDisplay -NoNewline
     if ($PingCount%$WrapWidth -eq 0) {Write-Host}
     sleep -Seconds 1
-
 }
 # 5.5 Repeat
 While (([datetime]$JobStart + $RunDuration) -gt (Get-Date))
@@ -210,7 +203,7 @@ foreach($node in $JobHeaderFile.Jobs.Job) {
         $foo = $JobHeaderFile.Jobs.ReplaceChild($UpdatedNode, $Node)}}
 $JobHeaderFile.Save("$FilePath\DiagJobHeader.xml")
 
-# 8. Upload Header and deatails xml to web server
+# 8. Upload Header and Detail xml to server
 $uri = "http://$RemoteHost/Upload.aspx"
 $contentType = "multipart/form-data"
 Try {
@@ -241,9 +234,3 @@ Start-Process -FilePath "http://$RemoteHost"
 # Clean up local files 
 Remove-Item "$FilePath\DiagJobHeader.xml"
 Remove-Item "$FilePath\DiagJobDetail.xml" 
-
-# TO DO
-# 1. Check xml schema version, if not current, overwrite
-# 2. Add Help switch and help information
-# 3. Add ending stats if CRTL-C pressed in middle of job
-

@@ -1,6 +1,4 @@
-﻿
-
-# Check Header File
+﻿# Check Header File
 If (Test-Path "$FilePath\DiagJobHeader.xml") {
     [xml]$xmlHeader = Get-Content "$FilePath\DiagJobHeader.xml"
     $RemoteHost = [int]($xmlHeader.SelectNodes('//Jobs/Job') | Sort ID -Descending | Select Target -First 1).Target
