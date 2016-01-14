@@ -35,7 +35,7 @@ Param(
    [int]$Duration=5,
    [ValidateSet("Seconds","Minutes")] 
    [string]$DurationInterval="Seconds",
-   [int]$TimeoutSeconds=4
+   [int]$TimeoutSeconds=5
 )
 
 # 2. Initialize
