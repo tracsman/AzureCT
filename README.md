@@ -98,8 +98,7 @@ To ensure 100% removal of all artifacts from this tool perform the following ste
 
 ## To Do (Backlog)
 
-1. (Show-Results.ps1) Make it work, it's currently broken due to a prior change.
-2. (WebPing.ps1) Check XML schema version, if not current, overwrite local XML.
+1. (WebPing.ps1) Check XML schema version, if not current, overwrite local XML.
 2. (WebPing.ps1) Add more help information, add Verbose output (Write-Verbose), and Debug Output (Write-Debug)
 3. (WebPing.ps1) Add ending stats if CRTL-C pressed in middle of job
 4. (WebDiag.ps1) Net new script, if WebPing fails, a simple troubleshooter

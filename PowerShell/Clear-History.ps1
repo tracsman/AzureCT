@@ -1,30 +1,14 @@
-﻿<#  
+﻿# Clear-History
+# This script deletes local xml file
+# if they exist, and calls a web
+# service if an IP address is passed
 
-WebPing
- Call ShowResults on End
-
-ShowResults
- Get
-
-ClearHistory
- Post = Yes
-
-
- WebTest.aspx
- index.html
- UploadHeader.aspx
- UploadDetail.aspx
- ClearHistory.aspx
-
- #>
 Param(
    [Parameter(ValueFromPipeline=$true)]
    [string]$RemoteHost = ''
-)
-write-host
-Write-Host "!! Caution !!" -ForegroundColor Yellow
+)cls
 Write-Host
-Write-Host "This script will erase all prior WebPing data on this and the remote server (if a remote address was supplied)"
+Write-Warning "This script will erase all prior WebPing data on this and the remote server (if a remote address was supplied)"
 $theAnswer = Read-Host -Prompt "Do you wish to continue? [Y], n"
 if ($theAnswer -eq '') {$theAnswer="Y"}
 if ($theAnswer -ne "Y") {
@@ -44,7 +28,7 @@ else {
         Write-Host "All WebPing history was cleared from the remote server." -ForegroundColor Green
         }
      else {
-        Write-Host "Warning: An error occured and WebPing history may not have been cleared from the remote server." -ForegroundColor Red
+        Write-Warning "An error occured and WebPing history may not have been cleared from the remote server."
         }
     }
 
@@ -57,7 +41,7 @@ If (Test-Path $fileHeader) {
         Write-Host "Local WebPing summary history was cleared from this computer." -ForegroundColor Green
         }
     catch {
-        Write-Host "Warning: Local WebPing summary history was not cleared from this computer." -ForegroundColor Red
+        Write-Warning "Local WebPing summary history was not cleared from this computer."
         }
 }
 else {
@@ -71,7 +55,7 @@ If (Test-Path $fileDetail) {
         Write-Host "Local WebPing detail history was cleared from this computer." -ForegroundColor Green
         }
     catch {
-        Write-Host "Warning: Local WebPing detail history was not cleared from this computer." -ForegroundColor Red
+        Write-Warning "Local WebPing detail history was not cleared from this computer."
         }
 }
 else {

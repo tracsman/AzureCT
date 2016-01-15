@@ -1,14 +1,12 @@
-﻿# Check Header File
-If (Test-Path "$FilePath\DiagJobHeader.xml") {
-    [xml]$xmlHeader = Get-Content "$FilePath\DiagJobHeader.xml"
-    $RemoteHost = [int]($xmlHeader.SelectNodes('//Jobs/Job') | Sort ID -Descending | Select Target -First 1).Target
-    Start-Process -FilePath "http://$RemoteHost/index.html"
-    }
-else {
-    Write-Host "No WebPing data found, run WebPing to generate data before running this command" -ForegroundColor Yellow
-    }
+﻿# Show-Results
+# This script opens a web browser and
+# navigates to the passed in IP Address.
 
-
-
-
-
+Param(
+   [Parameter(ValueFromPipeline=$true, Mandatory=$true)]
+   [ipaddress]$RemoteHost
+)
+Write-Host
+Write-Host "Launching browser to http://$RemoteHost"
+Write-Host
+Start-Process -FilePath "http://$RemoteHost"
