@@ -7,6 +7,7 @@ $(document).ready(function(){
 
         // Define Option Var
         myHTMLOutput = '';
+        x = 0;
 
         // Run the function for each Job in xml file
         $('Job', xml).each(function (i) {
@@ -17,6 +18,7 @@ $(document).ready(function(){
 
                 // Build Option Row for Drop down
                 myHTMLOutput += '<option value=' + jobID + '>' + jobStart + '</option>';
+                x += 1;
             };
         });
 
@@ -24,6 +26,7 @@ $(document).ready(function(){
         $("#JobList").append(myHTMLOutput);
 
         // Call onchange event to load the first job details
+        document.getElementById("JobList").selectedIndex = x-1;
         document.getElementById("JobList").onchange();
     });
  });
@@ -156,7 +159,7 @@ function PullJobDetails() {
 
                 // Build graph array
                 var myPingID = (+jobPingID);
-                var datapoint = { x: myPingID, y: Math.round(jobDuration) };
+                var datapoint = { x: myPingID, y: Math.round(jobDuration), z: jobValid };
                 
                 data.push(datapoint);
             };
@@ -169,8 +172,11 @@ function PullJobDetails() {
         var myTick;
         if (currentPingCount < 15) { myTick = 1; } else { myTick = currentPingCount / 15; };
         var myYMax;
-        if (currentPingMax > 1000) { myYMax = currentPingMax; } else { myYMax = 1000; };
-
+        if (currentSuccessRate != 100) { myYMax = currentTimeoutSeconds * 1000; } else
+        {
+            if (currentPingMax > 500) { myYMax = currentPingMax; } else { myYMax = 500; };
+        };
+        
         if (currentPingMax == 0) {
             ClearChart("ResultsGraph");
             ErrorChart("ResultsGraph", currentJobDisplay );
@@ -364,9 +370,11 @@ LineChart.prototype.drawLine = function (data, color, width) {
         context.stroke();
         context.closePath();
         context.beginPath();
+        if (data[n].z == "False") { context.fillStyle = "red"; };
         context.arc(point.x * this.scaleX, point.y * this.scaleY, this.pointRadius, 0, 2 * Math.PI, false);
         context.fill();
         context.closePath();
+        if (data[n].z == "False") { context.fillStyle = color; };
 
         // position for next segment
         context.beginPath();

@@ -97,6 +97,7 @@ Do {
     $ErrorType = "None"
     $PingDisplay = "n" # Null, this should never show
     $PingDisplayDescription = "Null" # This should never show
+
     # 5.1 Call WebTest.aspx
      ###########################################
     #  The following line is the magic, it is   #
