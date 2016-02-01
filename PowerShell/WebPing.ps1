@@ -93,7 +93,7 @@ Write-Host
 Do {
     $PingCount+=1
     # Get local time to save later in results
-    $PingTime = Get-Date -Format 's'
+    $PingTime = Get-Date -Format 'yyyy-MM-ddThh:mm:ss.fff'
     $ErrorType = "None"
     $PingDisplay = "n" # Null, this should never show
     $PingDisplayDescription = "Null" # This should never show
@@ -209,29 +209,33 @@ $uri = "http://$RemoteHost/Upload.aspx"
 $contentType = "multipart/form-data"
 Try {
     $header = @{FileID = "Header"}
-    $HeaderUploadResponse = Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobHeaderFile.OuterXml -Headers $header
+    $HeaderUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobHeaderFile.OuterXml -Headers $header -TimeoutSec 2).Content.Trim()
     $header = @{FileID = "Detail"}
-    $DetailUploadResponse = Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobDetailFile.OuterXml -Headers $header
+    $DetailUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobDetailFile.OuterXml -Headers $header -TimeoutSec 2).Content.Trim()
 }
 Catch {
     $HeaderUploadResponse = "Bad"
+    $DetailUploadResponse = "Bad"
 }
 
 Write-Host
-If ($HeaderUploadResponse.Content.Trim() -eq "Good" -and $DetailUploadResponse.Content.Trim() -eq "Good") {
-    Write-Host "Data uploaded to remote server sucessfully"} 
+If ($HeaderUploadResponse -eq "Good" -and $DetailUploadResponse -eq "Good") {
+    Write-Host "Data uploaded to remote server sucessfully"
+
+    # 9. Spawn local web browser showing report details from server
+    Write-Host "Launching browser to http://$RemoteHost"
+    Start-Process -FilePath "http://$RemoteHost"
+
+    #10. Close and Clean Up
+    # Clean up local files 
+    Remove-Item "$FilePath\DiagJobHeader.xml"
+    Remove-Item "$FilePath\DiagJobDetail.xml" 
+    } 
 Else {
     Write-Warning "Data upload to remote server failed."
     Write-Warning "Please check to ensure the remote server has all the files required to run this tool."
     Write-Warning "Also ensure the XML files in the 'c:\inetpub\wwwroot' have 'Full Control' file access for the local IIS_IUSRS account"
-    Return
 }
+Write-Host
+Return
 
-# 9. Spawn local web browser showing report details from server
-Write-Host "Launching browser to http://$RemoteHost"
-Start-Process -FilePath "http://$RemoteHost"
-
-#10. Close and Clean Up
-# Clean up local files 
-Remove-Item "$FilePath\DiagJobHeader.xml"
-Remove-Item "$FilePath\DiagJobDetail.xml" 

@@ -10,11 +10,9 @@
         padding: 3px 10px;
         text-align: center;
         }
-        th#time {width:200px;}
-        th#return {width:302px;}
-        th#display {width:205px;}
-        th#valid {width:100px;}
-        th#duration {width:100px;}
+		th#time {width:300px;}
+        th#display {width:455px;}
+        th#duration {width:200px;} 
     td {
         padding: 3px 5px;
         text-align: center;

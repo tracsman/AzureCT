@@ -1,7 +1,7 @@
 // File: DisplayPing.js
 
 // Start function when DOM has completely loaded 
-$(document).ready(function(){
+$(document).ready(function () {
     // Open the DiagJobHeader.xml file
     $.get('DiagJobHeader.xml', {}, function (xml) {
 
@@ -15,9 +15,10 @@ $(document).ready(function(){
             jobID = $(this).find('ID').text();
             if (jobID != "") {
                 jobStart = $(this).find('StartTime').text();
+                var dStart = new Date(jobStart);
 
                 // Build Option Row for Drop down
-                myHTMLOutput += '<option value=' + jobID + '>' + jobStart + '</option>';
+                myHTMLOutput += '<option value=' + jobID + '>&nbsp;&nbsp;' + dateString(dStart, 'noMilli') + '&nbsp;&nbsp;</option>';
                 x += 1;
             };
         });
@@ -25,11 +26,12 @@ $(document).ready(function(){
         // Update the Job List drop down with the HTML string
         $("#JobList").append(myHTMLOutput);
 
-        // Call onchange event to load the first job details
-        document.getElementById("JobList").selectedIndex = x-1;
+        // Select last job and call onchange event to load job details
+        document.getElementById("JobList").selectedIndex = x - 1;
         document.getElementById("JobList").onchange();
+
     });
- });
+});
 
 function PullJobDetails() {
     // Get the selected Job ID from the drop down 
@@ -91,9 +93,9 @@ function PullJobDetails() {
                 myHTMLOutput += '<tr><td class="SumHead" colspan=6 style="text-align:left;">Job Details:</td></tr>';
                 myHTMLOutput += '<tr>';
                 myHTMLOutput += '<td>Start Time:</td>';
-                myHTMLOutput += '<td>' + currentStartTime + '</td>';
+                myHTMLOutput += '<td>' + dateString(t1, 'noMilli') + '</td>';
                 myHTMLOutput += '<td>End Time:</td>';
-                myHTMLOutput += '<td>' + currentEndTime + '</td>';
+                myHTMLOutput += '<td>' + dateString(t2, 'noMilli') + '</td>';
                 myHTMLOutput += '<td>Job Duration:</td>';
                 myHTMLOutput += '<td>' + currentDuration + '</td>';
                 myHTMLOutput += '</tr>';
@@ -121,7 +123,7 @@ function PullJobDetails() {
         });
     });
 
-    // Open the DiagJobHeader.xml file
+    // Open the DiagJobDetail.xml file
     $.get('DiagJobDetail.xml', {}, function (xml) {
 
         // Define HTML string Var
@@ -129,77 +131,109 @@ function PullJobDetails() {
         myHTMLOutput += '<table id="ResultsTable"';
         myHTMLOutput += '<thead>';
         myHTMLOutput += '<th id=time>Time Stamp</th>'
-        myHTMLOutput += '<th id=return>Return</th>'
-        myHTMLOutput += '<th id=display>Display</th>'
-        myHTMLOutput += '<th id=valid>Valid</th>'
+        myHTMLOutput += '<th id=display>Remarks</th>'
         myHTMLOutput += '<th id=duration>Duration</th>'
         myHTMLOutput += '</thead>';
+
+        var t1 = new Date(currentStartTime);
+        var t2 = new Date(currentEndTime);
+        var chartWidth = document.getElementById("ResultsGraph").clientWidth - 100;
+        var totalDurationMS = (t2 - t1);
+        var timePerPixel = Math.round(totalDurationMS / chartWidth);
+        var iRunning = 0;
 
         // Run the function for each Job in xml file
         $('JobRecord', xml).each(function (i) {
 
             jobID = $(this).find('JobID').text();
             if (jobID == headerJobID) {
-                jobTimeStamp = $(this).find('TimeStamp').text();
-                jobPingID = $(this).find('PingID').text();
-                jobReturn = $(this).find('Return').text();
-                jobDisplay = $(this).find('Display').text();
-                currentJobDisplay=jobDisplay;
-                jobValid = $(this).find('Valid').text();
-                jobDuration = $(this).find('Duration').text();
+                pingTimeStamp = $(this).find('TimeStamp').text();
+                pingID = $(this).find('PingID').text();
+                pingReturn = $(this).find('Return').text();
+                pingDisplay = $(this).find('Display').text();
+                pingValid = $(this).find('Valid').text();
+                pingDuration = $(this).find('Duration').text();
+
+                // Calculate X position
+                var thisTime = new Date(pingTimeStamp);
+                if (pingID == 1) {
+                    dif = 1;
+                    pos = 1;
+                    lastTime = thisTime;
+                }
+                else {
+                    dif = thisTime - lastTime;
+                    pos += dif / timePerPixel;
+                    lastTime = thisTime;
+                };
 
                 // Build Table Row for Results Table
-                myHTMLOutput += '<tr>'
-                myHTMLOutput += '<td>' + jobTimeStamp + '</td>';
-                myHTMLOutput += '<td>' + jobReturn + '</td>';
-                myHTMLOutput += '<td>' + jobDisplay + '</td>';
-                myHTMLOutput += '<td>' + jobValid + '</td>';
-                myHTMLOutput += '<td>' + Math.round(jobDuration) + ' ms</td>';
-                myHTMLOutput += '</tr>'
+                myHTMLOutput += '<tr>';
+                myHTMLOutput += '<td>' + dateString(thisTime, 'withMilli') + '</td>';
+                myHTMLOutput += '<td>' + pingDisplay + '</td>';
+                myHTMLOutput += '<td>' + Math.round(pingDuration) + ' ms</td>';
+                myHTMLOutput += '</tr>';
 
                 // Build graph array
-                var myPingID = (+jobPingID);
-                var datapoint = { x: myPingID, y: Math.round(jobDuration), z: jobValid };
-                
+                var myPingID = (+pingID);
+                var datapoint = { x: pos, y: Math.round(pingDuration), z: pingValid };
                 data.push(datapoint);
+
             };
         });
         myHTMLOutput += "</table>";
 
         // Update the DIV called ResultsDiv with the HTML string
         $("#ResultsDiv").html(myHTMLOutput);
-       
+
         var myTick;
         if (currentPingCount < 15) { myTick = 1; } else { myTick = currentPingCount / 15; };
         var myYMax;
-        if (currentSuccessRate != 100) { myYMax = currentTimeoutSeconds * 1000; } else
-        {
-            if (currentPingMax > 500) { myYMax = currentPingMax; } else { myYMax = 500; };
-        };
-        
-        if (currentPingMax == 0) {
-            ClearChart("ResultsGraph");
-            ErrorChart("ResultsGraph", currentJobDisplay );
-        }
-        else {
-            ClearChart("ResultsGraph");
-            var myLineChart = new LineChart({
-                canvasId: "ResultsGraph",
-                minX: 0,
-                minY: 0,
-                maxX: currentPingCount,
-                maxY: myYMax,
-                unitsPerTickX: myTick,
-                unitsPerTickY: myYMax / 8
-            });
 
-            myLineChart.drawLine(data, "blue", 1);
-        };
+        if (currentPingMax > 500) { myYMax = currentPingMax; } else { myYMax = 500; };
+
+        // Instanitate the graph
+        ClearChart("ResultsGraph");
+        var myLineChart = new LineChart({
+            canvasId: "ResultsGraph",
+            minX: 0,
+            minY: 0,
+            maxX: currentPingCount,
+            maxY: myYMax,
+            unitsPerTickX: myTick,
+            unitsPerTickY: myYMax / 8
+        });
+
+        // Draw the chart
+        myLineChart.drawLine(data, "blue", 1);
+
     });
 };
 
 function pad(num) {
     return ('000' + num).substr(-2);
+};
+
+function dateString(dDate, sOption) {
+    var yyyy = dDate.getFullYear().toString();
+    var mm = (dDate.getMonth() + 1).toString();
+    var dd = dDate.getDate().toString();
+    var hh = dDate.getUTCHours().toString();
+    var MM = dDate.getMinutes().toString();
+    var ss = dDate.getSeconds().toString();
+
+    switch (sOption) {
+        case 'noMilli':
+            var sDisplay = yyyy + '-' + (mm[1] ? mm : "0" + mm[0]) + '-' + (dd[1] ? dd : "0" + dd[0]) + ' | ' + (hh[1] ? hh : "0" + hh[0]) + ':' + (MM[1] ? MM : "0" + MM[0]) + ':' + (ss[1] ? ss : "0" + ss[0]);
+            break;
+        case 'withMilli':
+            var fff = ('000' + dDate.getMilliseconds().toString()).substr(-3);
+            var sDisplay = yyyy + '-' + (mm[1] ? mm : "0" + mm[0]) + '-' + (dd[1] ? dd : "0" + dd[0]) + ' | ' + (hh[1] ? hh : "0" + hh[0]) + ':' + (MM[1] ? MM : "0" + MM[0]) + ':' + (ss[1] ? ss : "0" + ss[0]) + '.' + fff;
+            break;
+        default:
+            var sDisplay = '';
+    };
+    return sDisplay;
 };
 
 function LineChart(con) {
@@ -239,10 +273,10 @@ function LineChart(con) {
     // draw title and axis labels
     this.context.textAlign = 'center';
     var ChartLabel = 'Graph of Ping Response Time';
-    this.context.fillText(ChartLabel, (this.width / 2), 20);
+    this.context.fillText(ChartLabel, (this.width / 2) + 50, 20);
 
-    var xLabel = 'Number of Pings';
-    this.context.fillText(xLabel, (this.width / 2), 293);
+    var xLabel = 'Time (duration of this WebPing.ps1 run)';
+    this.context.fillText(xLabel, (this.width / 2) + 50, 285);
 
     var yLabel = 'Response Time (ms)';
     this.context.save();
@@ -260,16 +294,6 @@ function ClearChart(CanID) {
     var context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 };
-
-function ErrorChart(CanID, Message) {
-    var canvas = document.getElementById(CanID);
-    var context = canvas.getContext('2d');
-    context.font = "bold 250% sans-serif";
-    context.fillStyle = "#FF0000";
-    context.textAlign = "center";
-    context.fillText(Message, 500, 150);
-    context.fillStyle = "#000000";
-    };
 
 LineChart.prototype.getLongestValueWidth = function () {
     this.context.font = this.font;
@@ -292,12 +316,12 @@ LineChart.prototype.drawXAxis = function () {
     context.stroke();
 
     // draw tick marks
-    for (var n = 0; n < this.numXTicks; n++) {
-        context.beginPath();
-        context.moveTo((n + 1) * this.width / this.numXTicks + this.x, this.y + this.height);
-        context.lineTo((n + 1) * this.width / this.numXTicks + this.x, this.y + this.height - this.tickSize);
-        context.stroke();
-    }
+    //for (var n = 0; n < this.numXTicks; n++) {
+    //    context.beginPath();
+    //    context.moveTo((n + 1) * this.width / this.numXTicks + this.x, this.y + this.height);
+    //    context.lineTo((n + 1) * this.width / this.numXTicks + this.x, this.y + this.height - this.tickSize);
+    //    context.stroke();
+    //}
 
     // draw labels
     context.font = this.font;
@@ -305,13 +329,13 @@ LineChart.prototype.drawXAxis = function () {
     context.textAlign = "center";
     context.textBaseline = "middle";
 
-    for (var n = 0; n < this.numXTicks; n++) {
-        var label = Math.round((n + 1) * this.maxX / this.numXTicks);
-        context.save();
-        context.translate((n + 1) * this.width / this.numXTicks + this.x, this.y + this.height + this.padding);
-        context.fillText(label, 0, 0);
-        context.restore();
-    }
+    //for (var n = 0; n < this.numXTicks; n++) {
+    //    var label = Math.round((n + 1) * this.maxX / this.numXTicks);
+    //    context.save();
+    //    context.translate((n + 1) * this.width / this.numXTicks + this.x, this.y + this.height + this.padding);
+    //    context.fillText(label, 0, 0);
+    //    context.restore();
+    //}
     context.restore();
 };
 
@@ -360,25 +384,25 @@ LineChart.prototype.drawLine = function (data, color, width) {
     context.strokeStyle = color;
     context.fillStyle = color;
     context.beginPath();
-    context.moveTo(data[0].x * this.scaleX, data[0].y * this.scaleY);
+    context.moveTo(data[0].x + 20, data[0].y * this.scaleY);
 
     for (var n = 0; n < data.length; n++) {
         var point = data[n];
 
         // draw segment
-        context.lineTo(point.x * this.scaleX, point.y * this.scaleY);
+        context.lineTo(point.x + 20, point.y * this.scaleY);
         context.stroke();
         context.closePath();
         context.beginPath();
         if (data[n].z == "False") { context.fillStyle = "red"; };
-        context.arc(point.x * this.scaleX, point.y * this.scaleY, this.pointRadius, 0, 2 * Math.PI, false);
+        context.arc(point.x + 20, point.y * this.scaleY, this.pointRadius, 0, 2 * Math.PI, false);
         context.fill();
         context.closePath();
         if (data[n].z == "False") { context.fillStyle = color; };
 
         // position for next segment
         context.beginPath();
-        context.moveTo(point.x * this.scaleX, point.y * this.scaleY);
+        context.moveTo(point.x + 20, point.y * this.scaleY);
     }
     context.restore();
 };
