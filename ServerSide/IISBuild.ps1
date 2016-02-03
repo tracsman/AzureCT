@@ -55,10 +55,10 @@
     $FileName = @()
 
     # Stuff Array with XML files
-    $FileName += "C:\inetpub\wwwroot\DiagJobHeader.xml"
-    $FileName += "C:\inetpub\wwwroot\DiagJobDetail.xml"
-    $FileName += "C:\inetpub\wwwroot\TemplateJobDetail.xml"
-    $FileName += "C:\inetpub\wwwroot\TemplateJobHeader.xml"
+    $FileName += "C:\inetpub\wwwroot\AvailabilityDetail.xml"
+    $FileName += "C:\inetpub\wwwroot\AvailabilityHeader.xml"
+    $FileName += "C:\inetpub\wwwroot\TemplateAvailabilityDetail.xml"
+    $FileName += "C:\inetpub\wwwroot\TemplateAvailabilityHeader.xml"
 
     # Loop through array and set file permissions
     $i=0
