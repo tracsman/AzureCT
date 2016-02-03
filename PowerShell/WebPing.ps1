@@ -1,11 +1,11 @@
-﻿# WebPing
+﻿# Get-AzureNetworkAvailability
 # This script makes repeated calls to a web site on
 # a private vnet and logs the success/failure and
 # response times.
 #
 # Script Output
-# ! - Successfull WebPing
-# . - Unsuccsefull WebPing (timeout)
+# ! - Successfull Call
+# . - Unsuccsefull Call (timeout)
 # * - IP was reached but wrong data or error (404) was returned
 #
 # Execution Plan
@@ -32,44 +32,37 @@
 Param(
    [Parameter(ValueFromPipeline=$true, Mandatory=$true)]
    [ipaddress]$RemoteHost,
-   [int]$Duration=5,
-   [ValidateSet("Seconds","Minutes")] 
-   [string]$DurationInterval="Seconds",
+   [int]$DurationMinutes=1,
    [int]$TimeoutSeconds=5
 )
 
 # 2. Initialize
 $FilePath = $env:TEMP
-$JobSchemaVersion = "1.5"
-If ($Duration -eq 0) {$RunDuration = New-TimeSpan -Days 365} 
-    Else {
-    switch ($DurationInterval)
-    {   "Seconds" {$RunDuration = New-TimeSpan -Seconds ([int]$Duration)}
-        "Minutes" {$RunDuration = New-TimeSpan -Minutes ([int]$Duration)} } }
+$JobSchemaVersion = "1.6"
+$RunDuration = New-TimeSpan -Minutes ([int]$Duration)
 
 # Check for Header File
-If ((Test-Path "$FilePath\DiagJobHeader.xml") -eq $false) {
-    [string]$JobHeaderFile = "<?xml version=`"1.0`"?><Jobs version=`"$JobSchemaVersion`"><Job><ID/><StartTime/><EndTime/><Target/><TimeoutSeconds/><PingCount/><SuccessRate/><PingMin/><PingMax/><PingAvg/></Job></Jobs>"
-    $JobHeaderFile | Out-File -FilePath "$FilePath\DiagJobHeader.xml" -Encoding ascii}
+If ((Test-Path "$FilePath\AvailabilityHeader.xml") -eq $false) {
+    [string]$JobHeaderFile = "<?xml version=`"1.0`"?><Jobs version=`"$JobSchemaVersion`"><Job><ID/><StartTime/><EndTime/><Target/><TimeoutSeconds/><CallCount/><SuccessRate/><JobMin/><JobMax/><JobMedian/></Job></Jobs>"
+    $JobHeaderFile | Out-File -FilePath "$FilePath\AvailabilityHeader.xml" -Encoding ascii}
 
 # Check for Detail File
-If ((Test-Path "$FilePath\DiagJobDetail.xml") -eq $false) {
-    [string]$JobDetailFile = "<?xml version=`"1.0`"?><JobRecords version=`"$JobSchemaVersion`"><JobRecord><JobID/><PingID/><TimeStamp/><Return/><Display/><Valid/><Duration/></JobRecord></JobRecords>"
-    $JobDetailFile | Out-File -FilePath "$FilePath\DiagJobDetail.xml" -Encoding ascii}
+If ((Test-Path "$FilePath\AvailabilityDetail.xml") -eq $false) {
+    [string]$JobDetailFile = "<?xml version=`"1.0`"?><JobRecords version=`"$JobSchemaVersion`"><JobRecord><JobID/><CallID/><TimeStamp/><Return/><Display/><Valid/><Duration/></JobRecord></JobRecords>"
+    $JobDetailFile | Out-File -FilePath "$FilePath\AvailabilityDetail.xml" -Encoding ascii}
 
-[int]$PingCount=0
-[int]$PingGood=0
-[int]$PingBad=0
-[int]$PingMin=2000000000
-[int]$PingMax=0
-[int]$PingAvg=0
-[int64]$PingDurationTotal=0
+[int]$CallCount=0
+[int]$JobGood=0
+[int]$JobBad=0
+[int]$JobMin=2000000000
+[int]$JobMax=0
+[int]$JobMedian=0
 [int]$WrapWidth = $Host.UI.RawUI.BufferSize.Width - 5
 
 # 3. Load Files and Get Ready for new run
 # 3.1 Pull current Header and Detail xml files
-[xml]$JobHeaderFile = Get-Content "$FilePath\DiagJobHeader.xml"
-[xml]$JobDetailFile = Get-Content "$FilePath\DiagJobDetail.xml"
+[xml]$JobHeaderFile = Get-Content "$FilePath\AvailabilityHeader.xml"
+[xml]$JobDetailFile = Get-Content "$FilePath\AvailabilityDetail.xml"
 
 # 3.2 Generate JobID
 $JobID = [System.Guid]::NewGuid().toString()
@@ -83,115 +76,126 @@ $JobHeader.StartTime = [string]$JobStart
 $JobHeader.Target = [string]$RemoteHost.IPAddressToString
 $JobHeader.TimeoutSeconds = [string]$TimeoutSeconds
 $foo = $JobHeaderFile.Jobs.AppendChild($JobHeader)
-$JobHeaderFile.Save("$FilePath\DiagJobHeader.xml")
+$JobHeaderFile.Save("$FilePath\AvailabilityHeader.xml")
 
 # 5. Job Loop, duration as defined by user input
 Write-Host
-Write-Host "Starting WebPing to $RemoteHost..." -ForegroundColor Cyan
+Write-Host "Starting Avilability test to $RemoteHost..." -ForegroundColor Cyan
 Write-Host
 
+$CallArray = @()
 Do {
-    $PingCount+=1
+    $CallCount+=1
     # Get local time to save later in results
-    $PingTime = Get-Date -Format 'yyyy-MM-ddThh:mm:ss.fff'
+    $CallTime = Get-Date -Format 'yyyy-MM-ddTHH:mm:ss.fff'
     $ErrorType = "None"
-    $PingDisplay = "n" # Null, this should never show
-    $PingDisplayDescription = "Null" # This should never show
+    $CallDisplay = "n" # Null, this should never show
+    $CallDisplayDescription = "Null" # This should never show
 
     # 5.1 Call WebTest.aspx
      ###########################################
     #  The following line is the magic, it is   #
     #  the actual connectivity test being run.  #
-    #  $WebPing holds the results of the test.  #
-    #  $PingDuration is the ping duration in ms.#
+    #  $WebCall holds the results of the test.  #
+    #  $CallDuration is the call duration in ms.#
      ###########################################
 
     Try {
-        $PingDuration = Measure-Command {$WebPing = (Invoke-WebRequest -Uri http://$RemoteHost/WebTest.aspx -TimeoutSec $TimeoutSeconds)}
+        $CallDuration = Measure-Command {$WebCall = (Invoke-WebRequest -Uri http://$RemoteHost/WebTest.aspx -TimeoutSec $TimeoutSeconds)}
 
         # Pull server data from the test
-        $ServerTime = ($WebPing.AllElements | ? {$_.tagName -eq 'HEAD'}).innerText
-        $Result = ($WebPing.AllElements | ? {$_.tagName -eq 'BODY'}).innerText
+        $ServerTime = ($WebCall.AllElements | ? {$_.tagName -eq 'HEAD'}).innerText
+        $Result = ($WebCall.AllElements | ? {$_.tagName -eq 'BODY'}).innerText
         }
     Catch {
         if ($error[0].Exception.Status -eq "Timeout") {$ErrorType = "Timeout"} 
         Else {$ErrorType = "Other"} # Other Error, probably 404
-        $WebPing = ""
-        $PingDuration = ""
+        $WebCall = ""
+        $CallDuration = ""
         $ServerTime = ""
         $Result = $error[0].Exception.Message
         }
     # Validate Server Return
     $Valid = [bool]($Result.Trim() -eq '1.0')
     
-    if ($Valid) {$PingDisplay="!"; $PingDisplayDescription="Valid Ping Response"} 
-    elseif ($ErrorType -eq "None") {$PingDisplay="*"; $PingDisplayDescription="Bad Data Returned"; $Result = "Page Title: " + (($WebPing.AllElements | ? {$_.tagName -eq 'TITLE'}).innerText)}
-    elseif ($ErrorType -eq "Timeout") {$PingDisplay="."; $PingDisplayDescription="Timeout"}
-    else {$PingDisplay="*"; $PingDisplayDescription="Ping Response Error"}
+    if ($Valid) {$CallDisplay="!"; $CallDisplayDescription="Valid Call Response"} 
+    elseif ($ErrorType -eq "None") {$CallDisplay="*"; $CallDisplayDescription="Bad Data Returned"; $Result = "Page Title: " + (($WebCall.AllElements | ? {$_.tagName -eq 'TITLE'}).innerText)}
+    elseif ($ErrorType -eq "Timeout") {$CallDisplay="."; $CallDisplayDescription="Timeout"}
+    else {$CallDisplay="*"; $CallDisplayDescription="Call Response Error"}
 
     # Update Counters
-    if ($Valid) {$PingGood+=1} Else {$PingBad+=1}
-    [decimal]$SuccessRate = $PingGood/$PingCount*100
+    if ($Valid) {$JobGood+=1} Else {$JobBad+=1}
+    [decimal]$SuccessRate = $JobGood/$CallCount*100
     $SuccessRate = "{0:N2}" -f $SuccessRate
-    $PingDurationTotal+=$PingDuration.TotalMilliseconds
-    if ($PingDuration.TotalMilliseconds -lt $PingMin) {$PingMin = $PingDuration.TotalMilliseconds}
-    if ($PingDuration.TotalMilliseconds -gt $PingMax) {$PingMax = $PingDuration.TotalMilliseconds}
+    if ($CallDuration.TotalMilliseconds -lt $JobMin) {$JobMin = $CallDuration.TotalMilliseconds}
+    if ($CallDuration.TotalMilliseconds -gt $JobMax) {$JobMax = $CallDuration.TotalMilliseconds}
+    if ($Valid) {$CallArray += $CallDuration.TotalMilliseconds}
 
     # 5.2 Create Job Details xml
     $JobDetail=""
     $JobDetail = (@($JobDetailFile.JobRecords.JobRecord)[0]).Clone()
     $JobDetail.JobID = [string]$JobID
-    $JobDetail.PingID = [string]$PingCount
-    $JobDetail.TimeStamp = [string]$PingTime
+    $JobDetail.CallID = [string]$CallCount
+    $JobDetail.TimeStamp = [string]$CallTime
     $JobDetail.Return = $Result
-    $JobDetail.Display = $PingDisplayDescription
+    $JobDetail.Display = $CallDisplayDescription
     $JobDetail.Valid = [string]$Valid
-    $JobDetail.Duration = [string]$PingDuration.TotalMilliseconds
+    $JobDetail.Duration = [string]$CallDuration.TotalMilliseconds
 
     # 5.3 Log new results xml to local file
     $foo = $JobDetailFile.JobRecords.AppendChild($JobDetail)
-    $JobDetailFile.Save("$FilePath\DiagJobDetail.xml")
+    $JobDetailFile.Save("$FilePath\AvailabilityDetail.xml")
 
     # 5.4 Log summary results to local file
     foreach($Node in $JobHeaderFile.Jobs.Job) { 
         If ($Node.ID -eq $JobID) {
             $UpdatedNode = $Node
-            $UpdatedNode.PingCount = [string]$PingCount
+            $UpdatedNode.CallCount = [string]$CallCount
             $UpdatedNode.SuccessRate = [string]$SuccessRate
-            $UpdatedNode.PingMin = [string]$PingMin
-            $UpdatedNode.PingMax = [string]$PingMax
+            $UpdatedNode.JobMin = [string]$JobMin
+            $UpdatedNode.JobMax = [string]$JobMax
             $foo = $JobHeaderFile.Jobs.ReplaceChild($UpdatedNode, $Node)
             }}
-    $JobHeaderFile.Save("$FilePath\DiagJobHeader.xml")
+    $JobHeaderFile.Save("$FilePath\AvailabilityHeader.xml")
     
-    Write-Host $PingDisplay -NoNewline
-    if ($PingCount%$WrapWidth -eq 0) {Write-Host}
+    Write-Host $CallDisplay -NoNewline
+    if ($CallCount%$WrapWidth -eq 0) {Write-Host}
     sleep -Seconds 1
 }
 # 5.5 Repeat
 While (([datetime]$JobStart + $RunDuration) -gt (Get-Date))
 
 # 6. Calculate end of job stats
-$PingAvg = $PingDurationTotal / $PingCount
 $JobEnd = Get-Date -Format 's'
+
+# Get Median Call Latency
+$CallArray = $CallArray | sort
+if ($CallArray.count%2) {
+    $JobMedian = $CallArray[[math]::Floor($CallArray.count/2)]
+}
+else {
+    $JobMedian = $CallArray[$CallArray.Count/2],$CallArray[$CallArray.count/2-1] | measure -Average
+}  
+
+# Write summary host output
 Write-Host
 Write-Host
-Write-Host "WebPing statistics for $RemoteHost"
-Write-Host "   WebPings: Sent = " -NoNewline
-Write-Host $PingCount -NoNewline
+Write-Host "Statistics for $RemoteHost"
+Write-Host "   Calls Sent = " -NoNewline
+Write-Host $CallCount -NoNewline
 Write-Host ", Received = " -NoNewline
-Write-Host $PingGood -NoNewline -ForegroundColor Green
+Write-Host $JobGood -NoNewline -ForegroundColor Green
 Write-Host " (" -NoNewline
 Write-Host $SuccessRate"%" -NoNewline -ForegroundColor Green
 Write-Host "), Lost = " -NoNewline
-Write-Host $PingBad -ForegroundColor Red
-Write-Host "WebPing round trip times in milli-seconds:"
+Write-Host $JobBad -ForegroundColor Red
+Write-Host "Call round trip times in milli-seconds:"
 Write-Host "   Minimum = " -NoNewline
-Write-Host $PingMin -NoNewline
+Write-Host $JobMin -NoNewline
 Write-Host "ms, Maximum = " -NoNewline
-Write-Host $PingMax -NoNewline
-Write-Host "ms, Average = " -NoNewline
-Write-Host $PingAvg -NoNewline
+Write-Host $JobMax -NoNewline
+Write-Host "ms, Median = " -NoNewline
+Write-Host $JobMedian -NoNewline
 Write-Host "ms"
 Write-Host 
 
@@ -200,18 +204,19 @@ foreach($node in $JobHeaderFile.Jobs.Job) {
     If ($node.ID -eq $JobID) {
         $UpdatedNode = $Node
         $UpdatedNode.EndTime = [string]$JobEnd
-        $UpdatedNode.PingAvg = [string]$PingAvg
+        $UpdatedNode.JobMedian = [string]$JobMedian
         $foo = $JobHeaderFile.Jobs.ReplaceChild($UpdatedNode, $Node)}}
-$JobHeaderFile.Save("$FilePath\DiagJobHeader.xml")
+$JobHeaderFile.Save("$FilePath\AvailabilityHeader.xml")
 
 # 8. Upload Header and Detail xml to server
 $uri = "http://$RemoteHost/Upload.aspx"
 $contentType = "multipart/form-data"
 Try {
     $header = @{FileID = "Header"}
-    $HeaderUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobHeaderFile.OuterXml -Headers $header -TimeoutSec 2).Content.Trim()
+    $HeaderUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobHeaderFile.OuterXml -Headers $header).Content.Trim()
+
     $header = @{FileID = "Detail"}
-    $DetailUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobDetailFile.OuterXml -Headers $header -TimeoutSec 2).Content.Trim()
+    $DetailUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobDetailFile.OuterXml -Headers $header).Content.Trim()
 }
 Catch {
     $HeaderUploadResponse = "Bad"
@@ -228,8 +233,8 @@ If ($HeaderUploadResponse -eq "Good" -and $DetailUploadResponse -eq "Good") {
 
     #10. Close and Clean Up
     # Clean up local files 
-    Remove-Item "$FilePath\DiagJobHeader.xml"
-    Remove-Item "$FilePath\DiagJobDetail.xml" 
+    Remove-Item "$FilePath\AvailabilityHeader.xml"
+    Remove-Item "$FilePath\AvailabilityDetail.xml" 
     } 
 Else {
     Write-Warning "Data upload to remote server failed."

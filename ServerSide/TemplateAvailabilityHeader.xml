@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
-<Jobs version="1.5">
+<Jobs version="1.6">
   <Job>
     <ID/>
     <StartTime/>
     <EndTime/>
     <Target/>
     <TimeoutSeconds/>
-    <PingCount/>
+    <CallCount/>
     <SuccessRate/>
-    <PingMin/>
-    <PingMax/>
-    <PingAvg/>
+    <JobMin/>
+    <JobMax/>
+    <JobMedian/>
   </Job>
 </Jobs>

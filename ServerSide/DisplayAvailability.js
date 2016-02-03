@@ -1,9 +1,9 @@
-// File: DisplayPing.js
+// File: DisplayAvailability.js
 
 // Start function when DOM has completely loaded 
 $(document).ready(function () {
-    // Open the DiagJobHeader.xml file
-    $.get('DiagJobHeader.xml', {}, function (xml) {
+    // Open the AvailabilityHeader.xml file
+    $.get('AvailabilityHeader.xml', {}, function (xml) {
 
         // Define Option Var
         myHTMLOutput = '';
@@ -40,12 +40,12 @@ function PullJobDetails() {
     currentEndTime = '';
     currentTarget = '';
     currentTimeoutSeconds = '';
-    currentPingCount = '';
+    currentCallCount = '';
     currentSuccessRate = '';
-    currentPingMin = '';
-    currentPingMax = '';
-    currentPingAvg = '';
-    currentDuration = '';
+    currentJobMin = '';
+    currentJobMax = '';
+    currentJobMedian = '';
+    currentJobDuration = '';
     currentJobDisplay = '';
 
     // Define graph var
@@ -65,11 +65,11 @@ function PullJobDetails() {
                 currentEndTime = $(this).find('EndTime').text();
                 currentTarget = $(this).find('Target').text();
                 currentTimeoutSeconds = $(this).find('TimeoutSeconds').text();
-                currentPingCount = $(this).find('PingCount').text();
+                currentCallCount = $(this).find('CallCount').text();
                 currentSuccessRate = $(this).find('SuccessRate').text();
-                currentPingMin = $(this).find('PingMin').text();
-                currentPingMax = $(this).find('PingMax').text();
-                currentPingAvg = $(this).find('PingAvg').text();
+                currentJobMin = $(this).find('JobMin').text();
+                currentJobMax = $(this).find('JobMax').text();
+                currentJobMedian = $(this).find('JobAvg').text();
 
                 var t1 = new Date(currentStartTime);
                 var t2 = new Date(currentEndTime);
@@ -86,7 +86,7 @@ function PullJobDetails() {
 
                 if ((+runDays) == (+1)) { var unitDays = 'Day'; } else { var unitDays = 'Days'; };
 
-                currentDuration = runDays + ' ' + unitDays + ', ' + pad(runHours) + ':' + pad(runMinutes) + ':' + pad(runSeconds) + ' (hh:mm:ss)';
+                currentJobDuration = runDays + ' ' + unitDays + ', ' + pad(runHours) + ':' + pad(runMinutes) + ':' + pad(runSeconds) + ' (hh:mm:ss)';
 
                 myHTMLOutput = '';
                 myHTMLOutput += '<table id="SummaryTable">';
@@ -97,24 +97,24 @@ function PullJobDetails() {
                 myHTMLOutput += '<td>End Time:</td>';
                 myHTMLOutput += '<td>' + dateString(t2, 'noMilli') + '</td>';
                 myHTMLOutput += '<td>Job Duration:</td>';
-                myHTMLOutput += '<td>' + currentDuration + '</td>';
+                myHTMLOutput += '<td>' + currentJobDuration + '</td>';
                 myHTMLOutput += '</tr>';
                 myHTMLOutput += '<tr>';
                 myHTMLOutput += '<td>Target IP:</td>';
                 myHTMLOutput += '<td>' + currentTarget + '</td>';
-                myHTMLOutput += '<td>Pings Sent:</td>';
-                myHTMLOutput += '<td>' + currentPingCount + ' (' + currentSuccessRate + '%) Successful</td>';
+                myHTMLOutput += '<td>Calls Sent:</td>';
+                myHTMLOutput += '<td>' + currentCallCount + ' (' + currentSuccessRate + '%) Successful</td>';
                 myHTMLOutput += '<td>Timeout Value:</td>';
                 myHTMLOutput += '<td>' + currentTimeoutSeconds + ' Seconds</td>';
                 myHTMLOutput += '</tr>';
                 myHTMLOutput += '<tr><td class="SumHead" colspan="6" style="text-align:left;">Results Summary:</td></tr>';
                 myHTMLOutput += '<tr>';
                 myHTMLOutput += '<td>Min:</td>';
-                myHTMLOutput += '<td>' + currentPingMin + ' ms</td>';
+                myHTMLOutput += '<td>' + currentJobMin + ' ms</td>';
                 myHTMLOutput += '<td>Max:</td>';
-                myHTMLOutput += '<td>' + currentPingMax + ' ms</td>';
-                myHTMLOutput += '<td>Avg:</td>';
-                myHTMLOutput += '<td>' + currentPingAvg + ' ms</td>';
+                myHTMLOutput += '<td>' + currentJobMax + ' ms</td>';
+                myHTMLOutput += '<td>Median:</td>';
+                myHTMLOutput += '<td>' + currentJobMedian + ' ms</td>';
                 myHTMLOutput += '</tr>';
                 myHTMLOutput += '</table>';
                 $("#SummaryDiv").html(myHTMLOutput);
@@ -123,8 +123,8 @@ function PullJobDetails() {
         });
     });
 
-    // Open the DiagJobDetail.xml file
-    $.get('DiagJobDetail.xml', {}, function (xml) {
+    // Open the AvailabilityDetail.xml file
+    $.get('AvailabilityDetail.xml', {}, function (xml) {
 
         // Define HTML string Var
         myHTMLOutput = '';
@@ -147,16 +147,16 @@ function PullJobDetails() {
 
             jobID = $(this).find('JobID').text();
             if (jobID == headerJobID) {
-                pingTimeStamp = $(this).find('TimeStamp').text();
-                pingID = $(this).find('PingID').text();
-                pingReturn = $(this).find('Return').text();
-                pingDisplay = $(this).find('Display').text();
-                pingValid = $(this).find('Valid').text();
-                pingDuration = $(this).find('Duration').text();
+                callTimeStamp = $(this).find('TimeStamp').text();
+                callID = $(this).find('CallID').text();
+                callReturn = $(this).find('Return').text();
+                callDisplay = $(this).find('Display').text();
+                callValid = $(this).find('Valid').text();
+                callDuration = $(this).find('Duration').text();
 
                 // Calculate X position
-                var thisTime = new Date(pingTimeStamp);
-                if (pingID == 1) {
+                var thisTime = new Date(callTimeStamp);
+                if (callID == 1) {
                     dif = 1;
                     pos = 1;
                     lastTime = thisTime;
@@ -170,13 +170,13 @@ function PullJobDetails() {
                 // Build Table Row for Results Table
                 myHTMLOutput += '<tr>';
                 myHTMLOutput += '<td>' + dateString(thisTime, 'withMilli') + '</td>';
-                myHTMLOutput += '<td>' + pingDisplay + '</td>';
-                myHTMLOutput += '<td>' + Math.round(pingDuration) + ' ms</td>';
+                myHTMLOutput += '<td>' + callDisplay + '</td>';
+                myHTMLOutput += '<td>' + Math.round(callDuration) + ' ms</td>';
                 myHTMLOutput += '</tr>';
 
                 // Build graph array
-                var myPingID = (+pingID);
-                var datapoint = { x: pos, y: Math.round(pingDuration), z: pingValid };
+                var myCallID = (+callID);
+                var datapoint = { x: pos, y: Math.round(callDuration), z: callValid };
                 data.push(datapoint);
 
             };
@@ -187,10 +187,10 @@ function PullJobDetails() {
         $("#ResultsDiv").html(myHTMLOutput);
 
         var myTick;
-        if (currentPingCount < 15) { myTick = 1; } else { myTick = currentPingCount / 15; };
+        if (currentCallCount < 15) { myTick = 1; } else { myTick = currentCallCount / 15; };
         var myYMax;
 
-        if (currentPingMax > 500) { myYMax = currentPingMax; } else { myYMax = 500; };
+        if (currentCallMax > 500) { myYMax = currentCallMax; } else { myYMax = 500; };
 
         // Instanitate the graph
         ClearChart("ResultsGraph");
@@ -198,7 +198,7 @@ function PullJobDetails() {
             canvasId: "ResultsGraph",
             minX: 0,
             minY: 0,
-            maxX: currentPingCount,
+            maxX: currentCallCount,
             maxY: myYMax,
             unitsPerTickX: myTick,
             unitsPerTickY: myYMax / 8
@@ -272,10 +272,10 @@ function LineChart(con) {
 
     // draw title and axis labels
     this.context.textAlign = 'center';
-    var ChartLabel = 'Graph of Ping Response Time';
+    var ChartLabel = 'Graph of Call Response Time';
     this.context.fillText(ChartLabel, (this.width / 2) + 50, 20);
 
-    var xLabel = 'Time (duration of this WebPing.ps1 run)';
+    var xLabel = 'Time (duration of this data set)';
     this.context.fillText(xLabel, (this.width / 2) + 50, 285);
 
     var yLabel = 'Response Time (ms)';

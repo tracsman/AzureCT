@@ -5,8 +5,8 @@
     Dim strFileID As String
     Dim strXMLNode As String
     Dim strFileCurrent As String
-    Dim strFileHeader As String = "DiagJobHeader.xml"
-    Dim strFileDetail As String = "DiagJobDetail.xml"
+    Dim strFileHeader As String = "AvailabilityHeader.xml"
+    Dim strFileDetail As String = "AvailabilityDetail.xml"
 
     Dim xmlOutput As XmlDocument
     Dim xmlInput As XmlDocument

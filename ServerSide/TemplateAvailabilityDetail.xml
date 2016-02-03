@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<JobRecords version="1.5">
+<JobRecords version="1.6">
   <JobRecord>
     <JobID/>
-    <PingID/>
+    <CallID/>
     <TimeStamp/>
     <Return/>
     <Display/>

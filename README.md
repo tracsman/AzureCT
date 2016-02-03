@@ -1,22 +1,24 @@
-# Azure Hybrid Availability Tool
+# Azure Connectivity Toolkit
 
 # <font color="red">This work is pre-release!<br/>It's close, but still a work in progress!</font>
 
 ## Overview
-This collection of server side web pages and local PowerShell scripts will generate, collect, store, and display availability statistics of the network between you and a newly built Windows VM on a Hybrid connected Network.
+This collection of server side web pages and local PowerShell scripts will generate, collect, store, and display availability statistics of the network between you and a newly built Windows VM on a Hybrid connected Network. It will do more in the future, but currently only runs availability tests.
 
-Is it designed to provide an indication, over time, of the link between an application server in Azure and an on-premise or remote network. The focus is on network performance, however the test is done from a PC client to an IIS server in Azure, thus providing a comprehensive view into total availability, not just a single point or component in the complex chain that makes up a hybrid network. The hope is that this will provide insight into the end-to-end network availability.
+Is it designed to provide an indication, over time, of the link between an application server in Azure and an on-premise or remote network. The focus is on network performance, however the test is done from a PC client to an IIS server in Azure, thus providing a comprehensive view into total availability, not just a single point or component in the complex chain that makes up a hybrid network connection. The hope is that this will provide insight into the end-to-end network availability.
 
-This tool **does not** provide rich insight if a problem is encountered during a test, over time this tool may improve but this initial release only reflects the statistics around availability seen while an active test is running.
+This tool **does not** provide rich insight if a problem is encountered during a test, over time this tool will improve but this initial release only reflects the statistics around availability seen while an active test is running.
 ![HAT Diagram](HAT.png)
+
+>**Note**: This tool is not certified by Microsoft, nor is it supported by Microsoft support. Download and use at your own risk. While the author is an employee of Microsoft, this tool is provided as my best effort to provide insight into a customers connectivity between an on-prem network and an Azure endpoint. The [Support and Legal Disclaimers](#support-and-legal-disclaimers) below for more info.
 
 ## Tool Usage
 ### Prerequisites
 This tool has three perquisite resources that must be in place before using:
 
-1. An Azure VNet network with a hybrid connection (either VPN or ExpressRoute) connected to a remote (usually "on-prem") network
+1. An Azure VNet network with a hybrid network connection (either VPN or ExpressRoute) connected to a remote (usually "on-prem") network.
 2. A newly created Azure VM, running Windows Server 2012 or greater, on the Azure VNet reachable from the on-prem network. The files and configuration of the server will be modified, potentially in disruptive ways. To avoid conflicts and/or errors it is important that the Azure VM used is newly built and a "clean" build with no other applications or data installed.
-3. A client PC running PowerShell 3.0 or greater on the on-prem network that can reach (via RDP or Remote Desktop) the Azure VM
+3. A client PC running PowerShell 3.0 or greater on the on-prem network that can reach (via RDP or Remote Desktop) the Azure VM.
 
 ### Installation Instructions
 1. Download the GitHub folders to your local client PC. The easiest way to this is to clone this repository to the local PC. If you're not familiar with Git or GitHub, there is a "[Download Zip](https://github.com/tracsman/HybridTool/archive/master.zip "Download Files Here")" button that will allow you to download all files and expand them on the local Client PC.
@@ -25,11 +27,11 @@ This tool has three perquisite resources that must be in place before using:
 	2. Open an elevated (i.e. "run as administrator") PowerShell prompt on the Azure VM.
 	3. Run the IISBuild.ps1, this will turn on ICMP (ping), install IIS, .Net 4.5, and copy some IIS application files from GitHub. If any errors occur with the file copies, or your server doesn't have access to the Internet, the files can be manually copied. Copy all files from the ServerSide directory of this GitHub to the C:\Inetpub\wwwroot folder on the server. **Note**: If needed, this script can be run multiple times on the server until all errors are resolved.
 3. Note the local IP address of the Azure VM.
-	- From PowerShell run: `(Get-NetIPAddress).IPv4Address`
+	- From PowerShell on the Azure VM run: `(Get-NetIPAddress).IPv4Address`
 	- Copy the first IP address, this should be the VNet IP address for your server. Note: it's not the 127.0.0.1 address.
 4. On the local Client PC, open a web browser.
 5. Go to `http://<IP Copied from Step 3>`; e.g. http://10.0.0.1
-6. You should successful bring up a web page titled "Hybrid Availability Home Page". This validates that the web server was successfully set-up and reachable by the local PC. Note: Since the WebPing script hasn't been run, this web page will just be the framework with no real data in it yet. Don't worry, we're about to generate some data!
+6. You should successful bring up a web page titled "Azure Connectivity Toolkit - Availability Home Page". This validates that the web server was successfully set-up and reachable by the local PC. Note: Since the WebPing script hasn't been run, this web page will just be the framework with no real data in it yet. Don't worry, we're about to generate some data!
 
 ### Running the tool
 1. On the local Client PC, open a PowerShell prompt.
@@ -106,5 +108,10 @@ To ensure 100% removal of all artifacts from this tool perform the following ste
 6. (DisplayPing.html) Make it prettier
 7. (HAT.psm1) Wrap the client side scripts into a module for ease of installation
 
-## License
+## Incorporated Licenses
 This tool incorporates [JQuery](https://jquery.org/license/ "JQuery License") for XML manipulation and is included in the ServerSide files. JQuery.js is included and used under the requirements of the MIT License, and in compliance with the main JQuery license proviso "*You are free to use any jQuery Foundation project in any other project (even commercial projects) as long as the copyright header is left intact.*"
+
+## Support and Legal Disclaimers
+Microsoft provides no support for this software. All support, assistance, and information is on this site alone.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; INCREMENTAL AZURE COSTS INCURRED THROUGH USE OF THIS SOFTWARE; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

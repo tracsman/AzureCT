@@ -20,15 +20,15 @@
     $FileName = @()
     
     # Stuff Array with FileNames
+    $FileName += "AvailabilityDetail.xml"
+    $FileName += "AvailabilityHeader.xml"
     $FileName += "ClearHistory.aspx"
-    $FileName += "DiagJobDetail.xml"
-    $FileName += "DiagJobHeader.xml"
-    $FileName += "DisplayPing.css"
-    $FileName += "DisplayPing.html"
-    $FileName += "DisplayPing.js"
+    $FileName += "DisplayAvailability.css"
+    $FileName += "DisplayAvailability.html"
+    $FileName += "DisplayAvailability.js"
     $FileName += "jquery.js"
-    $FileName += "TemplateJobDetail.xml"
-    $FileName += "TemplateJobHeader.xml"
+    $FileName += "TemplateAvailabilityDetail.xml"
+    $FileName += "TemplateAvailabilityHeader.xml"
     $FileName += "Upload.aspx"
     $FileName += "Web.config"
     $FileName += "WebTest.aspx"
