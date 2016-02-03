@@ -39,7 +39,7 @@ Param(
 # 2. Initialize
 $FilePath = $env:TEMP
 $JobSchemaVersion = "1.6"
-$RunDuration = New-TimeSpan -Minutes ([int]$Duration)
+$RunDuration = New-TimeSpan -Minutes $DurationMinutes
 
 # Check for Header File
 If ((Test-Path "$FilePath\AvailabilityHeader.xml") -eq $false) {
@@ -92,6 +92,11 @@ Do {
     $CallDisplay = "n" # Null, this should never show
     $CallDisplayDescription = "Null" # This should never show
 
+    # Run an initial call to load ARP and IIS caches along the call path
+    Try {
+        $WebCall = (Invoke-WebRequest -Uri http://$RemoteHost/WebTest.aspx -TimeoutSec 1)}
+    Catch {}
+    
     # 5.1 Call WebTest.aspx
      ###########################################
     #  The following line is the magic, it is   #

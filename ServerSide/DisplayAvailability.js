@@ -51,8 +51,8 @@ function PullJobDetails() {
     // Define graph var
     var data = [];
 
-    // Open the DiagJobHeader.xml file
-    $.get('DiagJobHeader.xml', {}, function (xml) {
+    // Open the AvailabilityHeader.xml file
+    $.get('AvailabilityHeader.xml', {}, function (xml) {
 
         // Run the function for each Job in xml file
         $('Job', xml).each(function (i) {
@@ -69,7 +69,7 @@ function PullJobDetails() {
                 currentSuccessRate = $(this).find('SuccessRate').text();
                 currentJobMin = $(this).find('JobMin').text();
                 currentJobMax = $(this).find('JobMax').text();
-                currentJobMedian = $(this).find('JobAvg').text();
+                currentJobMedian = $(this).find('JobMedian').text();
 
                 var t1 = new Date(currentStartTime);
                 var t2 = new Date(currentEndTime);
@@ -189,8 +189,7 @@ function PullJobDetails() {
         var myTick;
         if (currentCallCount < 15) { myTick = 1; } else { myTick = currentCallCount / 15; };
         var myYMax;
-
-        if (currentCallMax > 500) { myYMax = currentCallMax; } else { myYMax = 500; };
+        if (currentJobMax > 500) { myYMax = currentJobMax; } else { myYMax = 500; };
 
         // Instanitate the graph
         ClearChart("ResultsGraph");
