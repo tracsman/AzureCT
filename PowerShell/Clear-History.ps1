@@ -8,7 +8,7 @@ Param(
    [string]$RemoteHost = ''
 )cls
 Write-Host
-Write-Warning "This script will erase all prior WebPing data on this and the remote server (if a remote address was supplied)"
+Write-Warning "This script will erase all prior Get-AzureNetworkAvailability data on this and the remote server (if a remote address was supplied)"
 $theAnswer = Read-Host -Prompt "Do you wish to continue? [Y], n"
 if ($theAnswer -eq '') {$theAnswer="Y"}
 if ($theAnswer -ne "Y") {
@@ -21,43 +21,43 @@ if ($RemoteHost -eq '') {
     Write-Host "No remote address was provided, no remote data was cleared."
     }
 else {
-    Write-Host "Clearing WebPing history from the remote server." -ForegroundColor Cyan
+    Write-Host "Clearing data from the remote server." -ForegroundColor Cyan
     $uri = "http://$RemoteHost/ClearHistory.aspx"
     $response = (Invoke-WebRequest -Uri $uri -Method Post -Body "Yes").Content
     if ($response -eq "Good") {
-        Write-Host "All WebPing history was cleared from the remote server." -ForegroundColor Green
+        Write-Host "All Get-AzureNetworkAvailability data was cleared from the remote server." -ForegroundColor Green
         }
      else {
-        Write-Warning "An error occured and WebPing history may not have been cleared from the remote server."
+        Write-Warning "An error occured and Get-AzureNetworkAvailability data may not have been cleared from the remote server."
         }
     }
 
 # Clear local data if files exist.
-Write-Host "Clearing local WebPing history..." -ForegroundColor Cyan
-$fileHeader = "$env:TEMP\DiagJobHeader.xml"
+Write-Host "Clearing data from local machine..." -ForegroundColor Cyan
+$fileHeader = "$env:TEMP\AvailabilityHeader.xml"
 If (Test-Path $fileHeader) {
     try {
         Remove-Item -Path $fileHeader -Force
-        Write-Host "Local WebPing summary history was cleared from this computer." -ForegroundColor Green
+        Write-Host "Local Get-AzureNetworkAvailability summary data was cleared from this computer." -ForegroundColor Green
         }
     catch {
-        Write-Warning "Local WebPing summary history was not cleared from this computer."
+        Write-Warning "Local Get-AzureNetworkAvailability summary data was not cleared from this computer."
         }
 }
 else {
-    Write-Host "No local WebPing summary history was found on this computer." -ForegroundColor Green
+    Write-Host "No Get-AzureNetworkAvailability summary data was found on this computer." -ForegroundColor Green
     }
 
-$fileDetail = "$env:TEMP\DiagJobDetail.xml"
+$fileDetail = "$env:TEMP\AvailabilityDetail.xml"
 If (Test-Path $fileDetail) {
     try {
         Remove-Item -Path $fileDetail -Force
-        Write-Host "Local WebPing detail history was cleared from this computer." -ForegroundColor Green
+        Write-Host "Local Get-AzureNetworkAvailability detail data was cleared from this computer." -ForegroundColor Green
         }
     catch {
-        Write-Warning "Local WebPing detail history was not cleared from this computer."
+        Write-Warning "Local Get-AzureNetworkAvailability detail data was not cleared from this computer."
         }
 }
 else {
-    Write-Host "No local WebPing detail history was found on this computer." -ForegroundColor Green
+    Write-Host "No Get-AzureNetworkAvailability detail data was found on this computer." -ForegroundColor Green
     }
