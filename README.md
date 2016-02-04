@@ -28,6 +28,7 @@ This tool has three perquisite resources that must be in place before using:
 	3. Run the IISBuild.ps1, this will turn on ICMP (ping), install IIS, .Net 4.5, and copy some IIS application files from GitHub. If any errors occur with the file copies, or your server doesn't have access to the Internet, the files can be manually copied. Copy all files from the ServerSide directory of this GitHub to the C:\Inetpub\wwwroot folder on the server. **Note**: If needed, this script can be run multiple times on the server until all errors are resolved.
 3. Note the local IP address of the Azure VM.
 	- From PowerShell on the Azure VM run:
+
 		```powershell
 			 (Get-NetIPAddress).IPv4Address
 		```
@@ -49,6 +50,7 @@ This tool has three perquisite resources that must be in place before using:
 	.\Get-AzureNetworkAvailability.ps1 -RemoteHost 10.0.0.1
 	```
 5. Future execution of this script should be set for a given set of minutes, for example a 10 hour test:
+
 	```powershell
 	.\Get-AzureNetworkAvailability.ps1 -RemoteHost 10.0.0.1 -DurationMinutes 600
 	```
