@@ -42,7 +42,7 @@
     $FileName | ForEach{
         Try {
             $webClient = new-object System.Net.WebClient
-            $webClient.DownloadFile( "https://raw.githubusercontent.com/tracsman/HybridTool/master/ServerSide/" + $FileName[$i], "c:\inetpub\wwwroot\" + $FileName[$i] )
+            $webClient.DownloadFile( "https://raw.githubusercontent.com/tracsman/AzureCT/master/ServerSide/" + $FileName[$i], "c:\inetpub\wwwroot\" + $FileName[$i] )
             Write-Host "Copied successfully:" $FileName[$i] 
         }
         Catch {

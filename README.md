@@ -5,29 +5,29 @@
 ## Overview
 This collection of server side web pages and local PowerShell scripts will generate, collect, store, and display availability statistics of the network between you and a newly built Windows VM in Azure. It will do more in the future, but currently only runs availability tests.
 
-Is it designed to provide an indication, over time, of the link between an application server in Azure and an on-premise or remote network. The focus is on network performance, however the test is done from a PC client to an IIS server in Azure, thus providing a comprehensive view into total availability, not just a single point or component in the complex chain that makes up a VPN or an ExpressRoute network connection. The hope is that this will provide insight into the end-to-end network availability.
+It is designed to provide an indication, over time, of the link between a Virtual Machine in Azure and an on-premise network. While the focus is on network availability, the test is done from a PC client to an IIS server in Azure. This provides a view into the availability of an end-to-end scenario, not just a single point or component in the complex chain that makes up a VPN or an ExpressRoute network connection. The hope is that this will provide insight into the end-to-end network availability.
 
 This tool **does not** provide rich insight if a problem is encountered during a test, over time this tool will improve but this initial release only reflects the statistics around availability seen while an active test is running.
 ![AzureCT Availability Test Diagram](.\media\AzureCTAvailability.png)
 
->**Note**: This tool is not certified by Microsoft, nor is it supported by Microsoft support. Download and use at your own risk. While the author is an employee of Microsoft, this tool is provided as my best effort to provide insight into a customers connectivity between an on-premise network and an Azure endpoint. The [Support and Legal Disclaimers](#support-and-legal-disclaimers) below for more info.
+>**Note**: This tool is not certified by Microsoft, nor is it supported by Microsoft support. Download and use at your own risk. While the author is an employee of Microsoft, this tool is provided as my best effort to provide insight into a customers connectivity between an on-premise network and an Azure endpoint. See the [Support and Legal Disclaimers](#support-and-legal-disclaimers) below for more info.
 
 ## Tool Usage
 ### Prerequisites
 This tool has three perquisite resources that must be in place before using:
 
 1. An Azure virtual network with a VPN or ExpressRoute site-to-site connection to another (usually "on-premise") network.
-2. A newly created Azure VM, running Windows Server 2012 or greater, on the Azure VNet reachable from the on-premise network. The files and configuration of the server will be modified, potentially in disruptive ways. To avoid conflicts and/or errors it is important that the Azure VM used is newly built and a "clean" build with no other applications or data installed.
+2. A newly created Azure Virtual Machine (VM), running Windows Server 2012 or greater, on the Azure VNet that is reachable from the on-premise network. The files and configuration of the Azure VM will be modified, potentially in disruptive ways. To avoid conflicts and/or errors it is important that the Azure VM used is newly built and is a "clean" build, meaning with no other applications or data installed.
 3. A client PC running PowerShell 3.0 or greater on the on-premise network that can reach (via RDP or Remote Desktop) the Azure VM.
 
 ### Installation Instructions
-1. Download the GitHub folders to your local client PC. The easiest way to this is to clone this repository to the local PC. If you're not familiar with Git or GitHub, there is a "[Download Zip](https://github.com/tracsman/HybridTool/archive/master.zip "Download Files Here")" button that will allow you to download all files and expand them on the local Client PC.
+1. Download the GitHub folders to your local client PC. The easiest way to this is to clone this repository to the local PC. If you're not familiar with Git or GitHub, there is a "[Download Zip](https://github.com/tracsman/AzureCT/archive/master.zip "Download Files Here")" button that will allow you to download all files and expand them on the local Client PC.
 2. Remote Desktop to the newly built Azure VM running Windows Server:
 	1. Copy the IISBuild.ps1 script from the ServerSide folder to the Azure VM.
 	2. Open an elevated (i.e. "run as administrator") PowerShell prompt on the Azure VM.
 	3. Run the IISBuild.ps1, this will turn on ICMP (ping), install IIS, .Net 4.5, and copy some IIS application files from GitHub. If any errors occur with the file copies, or your server doesn't have access to the Internet, the files can be manually copied. Copy all files from the ServerSide directory of this GitHub to the C:\Inetpub\wwwroot folder on the server. **Note**: If needed, this script can be run multiple times on the server until all errors are resolved.
 3. Note the local IP address of the Azure VM.
-	- From PowerShell on the Azure VM run: `(Get-NetIPAddress).IPv4Address`
+	- From PowerShell on the Azure VM run: ```powershell (Get-NetIPAddress).IPv4Address```
 	- Copy the first IP address, this should be the VNet IP address for your server. Note: it's not the 127.0.0.1 address.
 4. On the local Client PC, open a web browser.
 5. Go to `http://<IP Copied from Step 3>`; e.g. http://10.0.0.1
@@ -97,15 +97,15 @@ To ensure 100% removal of all artifacts from this tool perform the following ste
 ## History
 2016-02-03 - Initial beta release, version 0.5.
 
-## To Do (Backlog)
+## To Do (Backlog) In Priority Order
 
-1. (Get-AzureNetworkAvailability.ps1) Check XML schema version, if not current, overwrite local XML.
-2. (Get-AzureNetworkAvailability.ps1) Add more help information, add Verbose output (Write-Verbose), and Debug Output (Write-Debug)
-3. (Get-AzureNetworkAvailability.ps1) Add ending stats if CRTL-C pressed in middle of job
-4. (WebDiag.ps1) Net new script, if Get-AzureNetworkAvailability fails, a simple troubleshooter
-5. (ServerDiag.ps1) Net new server side script that works with WebDiag.ps1 to trace the problem from the Azure side back to the on-prem network. The two will hopefully provide information to detect in which component the fault lies.
+1. (Get-LocalTrace.ps1) Net new script, if Get-AzureNetworkAvailability fails, a simple information collector to provide troubleshooting information.
+2. (Get-ServerTrace.ps1) Net new server side script that works with Get-LocalTrace.ps1 to inspect the network from the Azure side back towards the on-premise network. These two data sets will hopefully provide information to detect in which component the fault lies.
+3. (Get-AzureNetworkAvailability.ps1) Check XML schema version, if not current, overwrite local XML.
+4. (Get-AzureNetworkAvailability.ps1) Add more help information, add Verbose output (Write-Verbose), and Debug Output (Write-Debug)
+5. (Get-AzureNetworkAvailability.ps1) Add ending stats if CRTL-C pressed in middle of job
 6. (DisplayAvailability.html) Make it prettier
-7. (HAT.psm1) Wrap the client side scripts into a module for ease of installation
+7. (AzureCT.psm1) Wrap the client side scripts into a module for ease of installation
 
 ## Incorporated Licenses
 This tool incorporates [JQuery](https://jquery.org/license/ "JQuery License") for XML manipulation and is included in the ServerSide files. JQuery.js is included and used under the requirements of the MIT License, and in compliance with the main JQuery license proviso "*You are free to use any jQuery Foundation project in any other project (even commercial projects) as long as the copyright header is left intact.*"
