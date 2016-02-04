@@ -43,7 +43,11 @@ This tool has three perquisite resources that must be in place before using:
 	- **RemoteHost** - This is required and is the Azure VM local IP Address copied in step 3 of the Installation Instructions above.
 	- **DurationMinutes** - This optional parameter signifies the duration of the Get-AzureNetworkAvailability command in minutes. It is an integer value (whole number). The default value is 1.
 	- **TimeoutSeconds** - This optional parameter signifies how long each call will wait for a response. The default value is 5 seconds.
-4. For the first run, I recommend doing a test run of 1 minute (default option). To do this, in the PowerShell prompt run the following command: `.\Get-AzureNetworkAvailability.ps1 -RemoteHost <Azure VM IP>` ; e.g. .\Get-AzureNetworkAvailability.ps1 -RemoteHost 10.0.0.1
+4. For the first run, I recommend doing a test run of 1 minute (default option). To do this, in the PowerShell prompt run the following command: 
+	```powershell
+	.\Get-AzureNetworkAvailability.ps1 -RemoteHost <Azure VM IP>
+	```
+	e.g. .\Get-AzureNetworkAvailability.ps1 -RemoteHost 10.0.0.1
  
 >Note: Data from each run of the Get-AzureNetworkAvailability script will uploaded and saved to the Azure VM. If there are errors uploading the data or the command is terminated before uploading, the data is stored locally on the PC until the next successful run of the Get-AzureNetworkAvailability script. Uploaded data accumulates on the Azure VM and is selectable and displayed using the default IIS page on the Azure VM.
 
