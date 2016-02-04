@@ -8,7 +8,7 @@ This collection of server side web pages and local PowerShell scripts will gener
 It is designed to provide an indication, over time, of the link between a Virtual Machine in Azure and an on-premise network. While the focus is on network availability, the test is done from a PC client to an IIS server in Azure. This provides a view into the availability of an end-to-end scenario, not just a single point or component in the complex chain that makes up a VPN or an ExpressRoute network connection. The hope is that this will provide insight into the end-to-end network availability.
 
 This tool **does not** provide rich insight if a problem is encountered during a test, over time this tool will improve but this initial release only reflects the statistics around availability seen while an active test is running.
-![AzureCT Availability Test Diagram](\media\AzureCTAvailability.png)
+![AzureCT Availability Test Diagram](./media/AzureCTAvailability.png)
 
 >**Note**: This tool is not certified by Microsoft, nor is it supported by Microsoft support. Download and use at your own risk. While the author is an employee of Microsoft, this tool is provided as my best effort to provide insight into a customers connectivity between an on-premise network and an Azure endpoint. See the [Support and Legal Disclaimers](#support-and-legal-disclaimers) below for more info.
 
@@ -28,12 +28,10 @@ This tool has three perquisite resources that must be in place before using:
 	3. Run the IISBuild.ps1, this will turn on ICMP (ping), install IIS, .Net 4.5, and copy some IIS application files from GitHub. If any errors occur with the file copies, or your server doesn't have access to the Internet, the files can be manually copied. Copy all files from the ServerSide directory of this GitHub to the C:\Inetpub\wwwroot folder on the server. **Note**: If needed, this script can be run multiple times on the server until all errors are resolved.
 3. Note the local IP address of the Azure VM.
 	- From PowerShell on the Azure VM run:
-
-```powershell
-	 (Get-NetIPAddress).IPv4Address
-```
-	
-- Copy the first IP address, this should be the VNet IP address for your server. Note: it's not the 127.0.0.1 address.
+	```powershell
+		 (Get-NetIPAddress).IPv4Address
+	```
+	- Copy the first IP address, this should be the VNet IP address for your server. Note: it's not the 127.0.0.1 address.
 4. On the local Client PC, open a web browser.
 5. Go to `http://<IP Copied from Step 3>`; e.g. http://10.0.0.1
 6. You should successful bring up a web page titled "Azure Connectivity Toolkit - Availability Home Page". This validates that the web server was successfully set-up and reachable by the local PC. Note: Since the Get-AzureNetworkAvailability script hasn't been run, this web page will just be the framework with no real data in it yet. Don't worry, we're about to generate some data!
