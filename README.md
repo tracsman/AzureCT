@@ -28,9 +28,9 @@ This tool has three perquisite resources that must be in place before using:
 	3. Run the IISBuild.ps1, this will turn on ICMP (ping), install IIS, .Net 4.5, and copy some IIS application files from GitHub. If any errors occur with the file copies, or your server doesn't have access to the Internet, the files can be manually copied. Copy all files from the ServerSide directory of this GitHub to the C:\Inetpub\wwwroot folder on the server. **Note**: If needed, this script can be run multiple times on the server until all errors are resolved.
 3. Note the local IP address of the Azure VM.
 	- From PowerShell on the Azure VM run:
-	```powershell
-		 (Get-NetIPAddress).IPv4Address
-	```
+		```powershell
+			 (Get-NetIPAddress).IPv4Address
+		```
 	- Copy the first IP address, this should be the VNet IP address for your server. Note: it's not the 127.0.0.1 address.
 4. On the local Client PC, open a web browser.
 5. Go to `http://<IP Copied from Step 3>`; e.g. http://10.0.0.1
@@ -43,13 +43,16 @@ This tool has three perquisite resources that must be in place before using:
 	- **RemoteHost** - This is required and is the Azure VM local IP Address copied in step 3 of the Installation Instructions above.
 	- **DurationMinutes** - This optional parameter signifies the duration of the Get-AzureNetworkAvailability command in minutes. It is an integer value (whole number). The default value is 1.
 	- **TimeoutSeconds** - This optional parameter signifies how long each call will wait for a response. The default value is 5 seconds.
-4. For the first run, I recommend doing a test run of 1 minute (default option). To do this, in the PowerShell prompt run the following command:
+4. For the first run, I recommend doing a test run of 1 minute (default option). To do this, in the PowerShell prompt run the following command (where 10.0.0.1 is the private IP address of the Azure VM):
 
 	```powershell
-	.\Get-AzureNetworkAvailability.ps1 -RemoteHost <Azure VM IP>
+	.\Get-AzureNetworkAvailability.ps1 -RemoteHost 10.0.0.1
 	```
-e.g. .\Get-AzureNetworkAvailability.ps1 -RemoteHost 10.0.0.1
- 
+5. Future execution of this script should be set for a given set of minutes, for example a 10 hour test:
+	```powershell
+	.\Get-AzureNetworkAvailability.ps1 -RemoteHost 10.0.0.1 -DurationMinutes 600
+	```
+
 >Note: Data from each run of the Get-AzureNetworkAvailability script will uploaded and saved to the Azure VM. If there are errors uploading the data or the command is terminated before uploading, the data is stored locally on the PC until the next successful run of the Get-AzureNetworkAvailability script. Uploaded data accumulates on the Azure VM and is selectable and displayed using the default IIS page on the Azure VM.
 
 ### Tool Output
