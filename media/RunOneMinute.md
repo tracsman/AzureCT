@@ -17,4 +17,4 @@ Upon completion of the script it opens a local browser and displays from the rem
 [1]: DisplayOneMinute.png "Web Server Display of Data Set"
 
 <!--Link References-->
-[HOME]: ../README.md
+[HOME]: ../

@@ -21,7 +21,7 @@ This tool has three perquisite resources that must be in place before using:
 3. A client PC running PowerShell 3.0 or greater on the on-premise network that can reach (via RDP or Remote Desktop) the Azure VM.
 
 ### Installation Instructions
-1. Download the GitHub folders to your local client PC. The easiest way to this is to clone this repository to the local PC. If you're not familiar with Git or GitHub, there is a "[Download Zip](https://github.com/tracsman/AzureCT/archive/master.zip "Download Files Here")" button that will allow you to download all files and expand them on the local Client PC.
+1. Download the GitHub folders to your local client PC. The easiest way to this is to clone this repository to the local PC. If you're not familiar with Git or GitHub, there is a "[Download ZIP][Download]" button that will allow you to download all files and expand them on the local Client PC.
 2. Remote Desktop to the newly built Azure VM running Windows Server:
 	1. Copy the IISBuild.ps1 script from the ServerSide folder to the Azure VM.
 	2. Open an elevated (i.e. "run as administrator") PowerShell prompt on the Azure VM.
@@ -139,7 +139,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLU
 [0]: ./media/AzureCTAvailability.png "AzureCT Availability Test Diagram"
 
 <!--Link References-->
+[Download]: https://github.com/tracsman/AzureCT/archive/master.zip "Download Zip File Here"
 [One Minute]: ./media/RunOneMinute.md
-[Ten Hour]: ./media/RunOneMinute.md
-[Errors]: ./media/RunOneMinute.md
-[Timeout]: ./media/RunOneMinute.md
+[Ten Hour]: ./media/RunTenHour.md
+[Errors]: ./media/RunErrors.md
+[Timeout]: ./media/RunTimeout.md

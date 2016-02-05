@@ -3,11 +3,13 @@
 [Return to the README Page][HOME]
 
 ## PowerShell
-The following screen shot shows the PowerShell command and results of a one minute run of the Get-AzureNetworkAvailability script with two types of errors:
+The following screen shot shows the PowerShell command and results of a five minute run of the Get-AzureNetworkAvailability script with two types of errors:
 
 ![0]
 
-The ! represent successful calls to the Azure VM, * represent invalid data returned by the server (ie the server responded with an error or unexpected data), the . represent a call timeout.
+ - The **!** (exclamation point) represents successful calls to the Azure VM
+ - The **\*** (asterisk) represents invalid data returned by the server (ie the server responded with an error or unexpected data)
+ - The **.** (period) represents a call timeout.
 
 ## Web Display Screen Shot
 Upon completion of the script it opens a local browser and displays from the remote Azure VM a graph, summary data, and detail data of the most recent run. 
