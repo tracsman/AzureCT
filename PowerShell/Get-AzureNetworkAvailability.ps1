@@ -123,18 +123,18 @@ Do {
     # Validate Server Return
     $Valid = [bool]($Result.Trim() -eq '1.0')
     
-    if ($Valid) {$CallDisplay="!"; $CallDisplayDescription="Valid Call Response"} 
-    elseif ($ErrorType -eq "None") {$CallDisplay="*"; $CallDisplayDescription="Bad Data Returned"; $Result = "Page Title: " + (($WebCall.AllElements | ? {$_.tagName -eq 'TITLE'}).innerText)}
-    elseif ($ErrorType -eq "Timeout") {$CallDisplay="."; $CallDisplayDescription="Timeout"}
-    else {$CallDisplay="*"; $CallDisplayDescription="Call Response Error"}
+    If ($Valid) {$CallDisplay="!"; $CallDisplayDescription="Valid Call Response"} 
+    Elseif ($ErrorType -eq "None") {$CallDisplay="*"; $CallDisplayDescription="Bad Data Returned"; $Result = "Page Title: " + (($WebCall.AllElements | ? {$_.tagName -eq 'TITLE'}).innerText)}
+    Elseif ($ErrorType -eq "Timeout") {$CallDisplay="."; $CallDisplayDescription="Timeout"}
+    Else {$CallDisplay="*"; $CallDisplayDescription="Call Response Error"}
 
     # Update Counters
-    if ($Valid) {$JobGood+=1} Else {$JobBad+=1}
+    If ($Valid) {$JobGood+=1} Else {$JobBad+=1}
     [decimal]$SuccessRate = $JobGood/$CallCount*100
     $SuccessRate = "{0:N2}" -f $SuccessRate
-    if ($CallDuration.TotalMilliseconds -lt $JobMin) {$JobMin = $CallDuration.TotalMilliseconds}
-    if ($CallDuration.TotalMilliseconds -gt $JobMax) {$JobMax = $CallDuration.TotalMilliseconds}
-    if ($Valid) {$CallArray += $CallDuration.TotalMilliseconds}
+    If ($CallDuration.TotalMilliseconds -lt $JobMin) {$JobMin = $CallDuration.TotalMilliseconds}
+    If ($CallDuration.TotalMilliseconds -gt $JobMax) {$JobMax = $CallDuration.TotalMilliseconds}
+    If ($Valid) {$CallArray += $CallDuration.TotalMilliseconds}
 
     # 5.2 Create Job Details xml
     $JobDetail=""
@@ -152,7 +152,7 @@ Do {
     $JobDetailFile.Save("$FilePath\AvailabilityDetail.xml")
 
     # 5.4 Log summary results to local file
-    foreach($Node in $JobHeaderFile.Jobs.Job) { 
+    ForEach($Node in $JobHeaderFile.Jobs.Job) { 
         If ($Node.ID -eq $JobID) {
             $UpdatedNode = $Node
             $UpdatedNode.CallCount = [string]$CallCount
@@ -163,9 +163,14 @@ Do {
             }}
     $JobHeaderFile.Save("$FilePath\AvailabilityHeader.xml")
     
+    # Write output
     Write-Host $CallDisplay -NoNewline
-    if ($CallCount%$WrapWidth -eq 0) {Write-Host}
-    sleep -Seconds 1
+    If ($CallCount%$WrapWidth -eq 0) {Write-Host}
+    
+    # Decide how long to sleep
+    $SleepTime = 10000 - ((Get-Date) - [datetime]$CallTime).TotalMilliseconds
+    If ($SleepTime -lt 0) {$SleepTime = 0}
+    sleep -Milliseconds $SleepTime
 }
 # 5.5 Repeat
 While (([datetime]$JobStart + $RunDuration) -gt (Get-Date))
@@ -174,12 +179,15 @@ While (([datetime]$JobStart + $RunDuration) -gt (Get-Date))
 $JobEnd = Get-Date -Format 's'
 
 # Get Median Call Latency
-$CallArray = $CallArray | sort
-if ($CallArray.count%2) {
+$CallArray = $CallArray | Sort
+If ($CallArray.count -eq 0) {
+    $JobMedian = 0
+}
+ElseIf ($CallArray.count%2) {
     $JobMedian = $CallArray[[math]::Floor($CallArray.count/2)]
 }
-else {
-    $JobMedian = $CallArray[$CallArray.Count/2],$CallArray[$CallArray.count/2-1] | measure -Average
+Else {
+    $JobMedian = ($CallArray[$CallArray.Count/2],$CallArray[$CallArray.count/2-1] | Measure -Average).Average
 }  
 
 # Write summary host output
@@ -205,7 +213,7 @@ Write-Host "ms"
 Write-Host 
 
 # 7. Update Job Header xml in local file
-foreach($node in $JobHeaderFile.Jobs.Job) {
+ForEach($node in $JobHeaderFile.Jobs.Job) {
     If ($node.ID -eq $JobID) {
         $UpdatedNode = $Node
         $UpdatedNode.EndTime = [string]$JobEnd
@@ -248,4 +256,3 @@ Else {
 }
 Write-Host
 Return
-

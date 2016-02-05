@@ -8,9 +8,9 @@ This collection of server side web pages and local PowerShell scripts will gener
 It is designed to provide an indication, over time, of the link between a Virtual Machine in Azure and an on-premise network. While the focus is on network availability, the test is done from a PC client to an IIS server in Azure. This provides a view into the availability of an end-to-end scenario, not just a single point or component in the complex chain that makes up a VPN or an ExpressRoute network connection. The hope is that this will provide insight into the end-to-end network availability.
 
 This tool **does not** provide rich insight if a problem is encountered during a test, over time this tool will improve but this initial release only reflects the statistics around availability seen while an active test is running.
-![AzureCT Availability Test Diagram](./media/AzureCTAvailability.png)
+![0]
 
->**Note**: This tool is not certified by Microsoft, nor is it supported by Microsoft support. Download and use at your own risk. While the author is an employee of Microsoft, this tool is provided as my best effort to provide insight into a customers connectivity between an on-premise network and an Azure endpoint. See the [Support and Legal Disclaimers](#support-and-legal-disclaimers) below for more info.
+>**Note**: This tool is not certified by Microsoft, nor is it supported by Microsoft support. Download and use at your own risk. While the author is an employee of Microsoft, this tool is provided as my best effort to provide insight into a customer's connectivity between an on-premise network and an Azure endpoint. See the [Support and Legal Disclaimers](#support-and-legal-disclaimers) below for more info.
 
 ## Tool Usage
 ### Prerequisites
@@ -35,7 +35,7 @@ This tool has three perquisite resources that must be in place before using:
 	- Copy the first IP address, this should be the VNet IP address for your server. Note: it's not the 127.0.0.1 address.
 4. On the local Client PC, open a web browser.
 5. Go to `http://<IP Copied from Step 3>`; e.g. http://10.0.0.1
-6. You should successful bring up a web page titled "Azure Connectivity Toolkit - Availability Home Page". This validates that the web server was successfully set-up and reachable by the local PC. Note: Since the Get-AzureNetworkAvailability script hasn't been run, this web page will just be the framework with no real data in it yet. Don't worry, we're about to generate some data!
+6. You should successfully bring up a web page titled "Azure Connectivity Toolkit - Availability Home Page". This validates that the web server was successfully set-up and reachable by the local PC. Note: Since the Get-AzureNetworkAvailability script hasn't been run, this web page will just be the framework with no real data in it yet. Don't worry, we're about to generate some data!
 
 ### Running the tool
 1. On the local Client PC, open a PowerShell prompt.
@@ -75,6 +75,13 @@ Each call to the web server is also recorded locally, in the %temp% directory, i
 At the end of the script, a summary of the run will be output to the PowerShell prompt similar to ping results.
 
 The XML files are also uploaded to the server and a web browser should open on the local client machine with the details of all Get-AzureNetworkAvailability jobs run against that server. If the Get-AzureNetworkAvailability run was successful, and the data successfully uploaded to the server, the local XML files will be deleted from the local Client PC. If any errors with the job or the data upload, the XML will remain on the local Client PC until a successful Get-AzureNetworkAvailability run at which point all previous data sets will be uploaded and the XML files deleted locally.
+
+Example screen shots can be seen for these conditions:
+
+ - [A Successful one minute run][One Minute]
+ - [A successful ten hour run][Ten Hour]
+ - [A successful run with errors][Errors]
+ - [An unsuccessful run][Timeout]
 
 ### Data Presentation and Review
 After running Get-AzureNetworkAvailability.ps1, a web page should open on the local PC, displaying the data for all script runs.
@@ -127,3 +134,12 @@ This tool incorporates [JQuery](https://jquery.org/license/ "JQuery License") fo
 Microsoft provides no support for this software. All support, assistance, and information is on this site alone.
 
 THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; INCREMENTAL AZURE COSTS INCURRED THROUGH USE OF THIS SOFTWARE; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+<!--Image References-->
+[0]: ./media/AzureCTAvailability.png "AzureCT Availability Test Diagram"
+
+<!--Link References-->
+[One Minute]: ./media/RunOneMinute.md
+[Ten Hour]: ./media/RunOneMinute.md
+[Errors]: ./media/RunOneMinute.md
+[Timeout]: ./media/RunOneMinute.md

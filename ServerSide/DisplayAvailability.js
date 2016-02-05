@@ -217,7 +217,7 @@ function dateString(dDate, sOption) {
     var yyyy = dDate.getFullYear().toString();
     var mm = (dDate.getMonth() + 1).toString();
     var dd = dDate.getDate().toString();
-    var hh = dDate.getUTCHours().toString();
+    var hh = dDate.getHours().toString();
     var MM = dDate.getMinutes().toString();
     var ss = dDate.getSeconds().toString();
 
