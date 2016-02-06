@@ -29,8 +29,11 @@
 #
 
 # 1. Evaluate and Set input parameters
+[cmdletBinding()]
 Param(
-   [Parameter(ValueFromPipeline=$true, Mandatory=$true)]
+   [Parameter(ValueFromPipeline=$true,
+              Mandatory=$true,
+              HelpMessage='Enter IP Address of Remote Azure VM')]
    [ipaddress]$RemoteHost,
    [int]$DurationMinutes=1,
    [int]$TimeoutSeconds=5
