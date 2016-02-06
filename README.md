@@ -117,16 +117,6 @@ To ensure 100% removal of all artifacts from this tool perform the following ste
 ## History
 2016-02-03 - Initial beta release, version 0.5.
 
-## To Do (Backlog) In Priority Order
-
-1. (Get-LocalTrace.ps1) Net new script, if Get-AzureNetworkAvailability fails, a simple information collector to provide troubleshooting information.
-2. (Get-ServerTrace.ps1) Net new server side script that works with Get-LocalTrace.ps1 to inspect the network from the Azure side back towards the on-premise network. These two data sets will hopefully provide information to detect in which component the fault lies.
-3. (Get-AzureNetworkAvailability.ps1) Check XML schema version, if not current, overwrite local XML.
-4. (Get-AzureNetworkAvailability.ps1) Add more help information, add Verbose output (Write-Verbose), and Debug Output (Write-Debug)
-5. (Get-AzureNetworkAvailability.ps1) Add ending stats if CRTL-C pressed in middle of job
-6. (DisplayAvailability.html) Make it prettier
-7. (AzureCT.psm1) Wrap the client side scripts into a module for ease of installation
-
 ## Incorporated Licenses
 This tool incorporates [JQuery](https://jquery.org/license/ "JQuery License") for XML manipulation and is included in the ServerSide files. JQuery.js is included and used under the requirements of the MIT License, and in compliance with the main JQuery license proviso "*You are free to use any jQuery Foundation project in any other project (even commercial projects) as long as the copyright header is left intact.*"
 
