@@ -5,6 +5,7 @@
 function Install-AzureCT {
 
     $uri = 'https://github.com/tracsman/AzureCT/raw/vnext/PowerShell/AzureCT/'
+
     $FileName = @()
     $FileName += 'AzureCT.psd1'
     $FileName += 'AzureCT.psm1'
@@ -26,7 +27,7 @@ function Install-AzureCT {
 
     $executionPolicy = (Get-ExecutionPolicy)
     $executionRestricted = ($executionPolicy -eq "Restricted")
-    if ($executionRestricted) {
+    If ($executionRestricted) {
         Write-Warning "Your execution policy is $executionPolicy, this means you will not be able import or use any scripts including modules."
         Write-Warning "To fix this change your execution policy to something like RemoteSigned."
         Write-Host
@@ -42,6 +43,6 @@ function Install-AzureCT {
     }
     Write-Host "AzureCT is installed and ready to use" -Foreground Green
     Write-Host
-}
+} # End Function
 
 Install-AzureCT
