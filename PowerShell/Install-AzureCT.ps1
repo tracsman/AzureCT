@@ -27,20 +27,16 @@ function Install-AzureCT {
     $executionPolicy = (Get-ExecutionPolicy)
     $executionRestricted = ($executionPolicy -eq "Restricted")
     if ($executionRestricted) {
-        Write-Warning @"
-Your execution policy is $executionPolicy, this means you will not be able import or use any scripts including modules.
-To fix this change your execution policy to something like RemoteSigned.
-
-        PS> Set-ExecutionPolicy RemoteSigned
-
-For more information execute:
-
-        PS> Get-Help about_execution_policies
-
-"@
+        Write-Warning "Your execution policy is $executionPolicy, this means you will not be able import or use any scripts including modules."
+        Write-Warning "To fix this change your execution policy to something like RemoteSigned."
+        Write-Host
+        Write-Warning "     PS> Set-ExecutionPolicy RemoteSigned"
+        Write-Host
+        Write-Warning "For more information execute:"
+        Write-Host
+        Write-Warning "     PS> Get-Help about_execution_policies"
     }
-
-    if (!$executionRestricted) {
+    Else {
         # ensure AzureCT is imported from the location it was just installed to
         Import-Module -Name $Destination\AzureCT
     }
@@ -49,4 +45,3 @@ For more information execute:
 }
 
 Install-AzureCT
-
