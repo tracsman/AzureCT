@@ -1,60 +1,6 @@
-﻿# Install-AzureCT
+﻿# Install-AzureCT Module
 # To kick me off from a URL run the following:
 # (new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/vnext/PowerShell/Install-AzureCT.ps1") | Invoke-Expression
-
-function Find-Proxy() {
-    if ((Test-Path Env:HTTP_PROXY) -Or (Test-Path Env:HTTPS_PROXY)) {
-        return $true
-    }
-    Else {
-        return $false
-    }
-}
-
-function Get-Proxy() {
-    if (Test-Path Env:HTTP_PROXY) {
-        return $Env:HTTP_PROXY
-    }
-    ElseIf (Test-Path Env:HTTPS_PROXY) {
-        return $Env:HTTPS_PROXY
-    }
-}
-
-function Get-File {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory=$true)]
-        [String] $Url,
-
-        [Parameter(Mandatory=$true)]
-        [String] $SaveToLocation
-    )
-    $command = (Get-Command Invoke-WebRequest -ErrorAction SilentlyContinue)
-    if($command -ne $null) {
-        if (Find-Proxy) {
-            $proxy = Get-Proxy
-            Write-Host "Proxy detected"
-            Write-Host "Using proxy address $proxy"
-            Invoke-WebRequest -Uri $Url -OutFile $SaveToLocation -Proxy $proxy
-        }
-        else {
-            Invoke-WebRequest -Uri $Url -OutFile $SaveToLocation
-        }
-    }
-    else {
-        $client = (New-Object Net.WebClient)
-        $client.UseDefaultCredentials = $true
-        if (Find-Proxy) {
-            $proxy = Get-Proxy
-            Write-Host "Proxy detected"
-            Write-Host "Using proxy address $proxy"
-            $webproxy = new-object System.Net.WebProxy
-            $webproxy.Address = $proxy
-            $client.proxy = $webproxy
-        }
-        $client.DownloadFile($Url, $SaveToLocation)
-    }
-}
 
 function Install-AzureCT {
 

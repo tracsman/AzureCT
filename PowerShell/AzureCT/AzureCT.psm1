@@ -14,4 +14,6 @@
         }
     }
 
-Export-ModuleMember -Function $Public.Basename
+Export-ModuleMember -Function Get-AzureNetworkAvailability
+Export-ModuleMember -Function Clear-AzureCTHistory
+Export-ModuleMember -Function Show-AzureCTResults
