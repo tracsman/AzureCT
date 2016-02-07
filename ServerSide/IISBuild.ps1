@@ -1,4 +1,6 @@
 ﻿# IIS Server Post Build Config Script
+# To kick me off from a URL run the following:
+# (new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/ServerSide/IISBuild.ps1") | Invoke-Expression
 
 # Must be run from an elevated PS prompt!
     If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {

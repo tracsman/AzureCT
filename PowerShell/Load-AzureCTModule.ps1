@@ -1,1 +1,0 @@
-﻿Import-Module -Name C:\Bin\Git\AzureCT\PowerShell\AzureCT -Verbose
