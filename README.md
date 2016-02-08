@@ -24,17 +24,17 @@ This tool has three perquisite resources that must be in place before using:
 1. Local PC Instructions: 
 	- Install the AzureCT PowerShell module by running the following command in a PowerShell prompt:
 
-			```powershell
-				(new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/PowerShell/Install-AzureCT.ps1") | Invoke-Expression
-			```
+		```powershell
+		(new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/PowerShell/Install-AzureCT.ps1") | Invoke-Expression
+		```
 	- This will install three PowerShell cmdlets; Get-AzureNetworkAvailability, Clear-AzureCTHistory, and Show-AzureCTResults
 2. Azure VM Instructions: 
 	- Note the IP Address for this Azure VM that was assigned by the VNet, this will be used many times.
 	- Install the web application by running the following command in an elevated PowerShell prompt (ie "Run as Administrator")
 
-			```powershell
-			 	(new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/ServerSide/IISBuild.ps1") | Invoke-Expression
-			```
+		```powershell
+		(new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/ServerSide/IISBuild.ps1") | Invoke-Expression
+		```
 
 	- This script will turn on ICMP (ping), install IIS, .Net 4.5, and copy some IIS application files from GitHub. If any errors occur with the file copies, or your server doesn't have access to the Internet, the files can be manually copied. Copy all files from the ServerSide directory of this GitHub to the C:\Inetpub\wwwroot folder on the server. **Note**: If needed, this script can be run multiple times on the server until all errors are resolved. If you manually copy the files, please run the script again to ensure proper file permissions are set on the files.
 4. Validate Installation:
