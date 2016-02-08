@@ -121,10 +121,13 @@ To ensure 100% removal of all artifacts from this tool perform the following ste
 1. Run the Remove-AzureCT command from PowerShell. This will remove the PowerShell module and any local data files.
 
 
+<<<<<<< HEAD
 ## History
 2016-02-03 - Initial beta release 1.6.0.1
 2016-02-07 - Updated beta release 1.6.0.2 
 
+=======
+>>>>>>> master
 ## Incorporated Licenses
 This tool incorporates [JQuery](https://jquery.org/license/ "JQuery License") for XML manipulation and is included in the ServerSide files. JQuery.js is included and used under the requirements of the MIT License, and in compliance with the main JQuery license proviso "*You are free to use any jQuery Foundation project in any other project (even commercial projects) as long as the copyright header is left intact.*"
 
@@ -142,4 +145,7 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLU
 [Ten Hour]: ./media/RunTenHour.md
 [Errors]: ./media/RunErrors.md
 [Timeout]: ./media/RunTimeout.md
+<<<<<<< HEAD
 [MSDN]: https://technet.microsoft.com/en-us/library/hh849812.aspx
+=======
+>>>>>>> master
