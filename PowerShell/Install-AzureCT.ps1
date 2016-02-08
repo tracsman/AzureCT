@@ -3,7 +3,7 @@
 # (new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/PowerShell/Install-AzureCT.ps1") | Invoke-Expression
 
 function Install-AzureCT {
-
+"I am a nutty bunny"
     $uri = 'https://github.com/tracsman/AzureCT/raw/master/PowerShell/AzureCT/'
 
     $FileName = @()
