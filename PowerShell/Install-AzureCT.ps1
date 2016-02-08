@@ -1,10 +1,10 @@
 ﻿# Install-AzureCT Module
 # To kick me off from a URL run the following:
-# (new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/vnext/PowerShell/Install-AzureCT.ps1") | Invoke-Expression
+# (new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/PowerShell/Install-AzureCT.ps1") | Invoke-Expression
 
 function Install-AzureCT {
 
-    $uri = 'https://github.com/tracsman/AzureCT/raw/vnext/PowerShell/AzureCT/'
+    $uri = 'https://github.com/tracsman/AzureCT/raw/master/PowerShell/AzureCT/'
 
     $FileName = @()
     $FileName += 'AzureCT.psd1'
@@ -12,16 +12,17 @@ function Install-AzureCT {
     $FileName += 'Public/Clear-AzureCTHistory.ps1'
     $FileName += 'Public/Get-AzureNetworkAvailability.ps1'
     $FileName += 'Public/Show-AzureCTResults.ps1'
+    $FileName += 'Public/Remove-AzureCT.ps1'
    
-    $Destination = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath 'WindowsPowerShell\Modules\'
-    New-Item -Path ($Destination + "\AzureCT\") -ItemType Directory -Force | Out-Null
-    New-Item -Path ($Destination + "\AzureCT\Public") -ItemType Directory -Force | Out-Null
+    $Destination = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath 'WindowsPowerShell\Modules\AzureCT\'
+    New-Item -Path ($Destination) -ItemType Directory -Force | Out-Null
+    New-Item -Path ($Destination + "Public") -ItemType Directory -Force | Out-Null
 
     Write-Host
 
     ForEach ($File in $FileName) {
         $webClient = new-object System.Net.WebClient
-        $webClient.DownloadFile( $uri + $File, $Destination + '\AzureCT\' + $File )
+        $webClient.DownloadFile( $uri + $File, $Destination + $File )
         Write-Host "Copied successfully:" $File 
     }
 
@@ -39,7 +40,7 @@ function Install-AzureCT {
     }
     Else {
         # ensure AzureCT is imported from the location it was just installed to
-        Import-Module -Name $Destination\AzureCT
+        Import-Module -Name $Destination
     }
     Write-Host "AzureCT is installed and ready to use" -Foreground Green
     Write-Host
