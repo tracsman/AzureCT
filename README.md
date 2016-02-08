@@ -27,10 +27,10 @@ This tool has three perquisite resources that must be in place before using:
 		```powershell
 		(new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/PowerShell/Install-AzureCT.ps1") | Invoke-Expression
 		```
-	- This will install three PowerShell cmdlets; Get-AzureNetworkAvailability, Clear-AzureCTHistory, and Show-AzureCTResults
+	- This will install four PowerShell cmdlets; Get-AzureNetworkAvailability, Clear-AzureCTHistory, Show-AzureCTResults, and Remove-AzureCT.
 2. Azure VM Instructions: 
 	- Note the IP Address for this Azure VM that was assigned by the VNet, this will be used many times.
-	- Install the web application by running the following command in an elevated PowerShell prompt (ie "Run as Administrator")
+	- Install the web application by running the following command in an elevated PowerShell prompt (ie "Run as Administrator") on the Azure VM.
 
 		```powershell
 		(new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/ServerSide/IISBuild.ps1") | Invoke-Expression
@@ -70,11 +70,11 @@ Get-AzureNetworkAvailability will issue a call to a web page on the remote serve
 
 >**Possible Script Output**
 >
->! - Successful Call
+>! (exclamation point) - Successful Call
 >
->. - Unsuccessful Call (timeout)
+>. (period) - Unsuccessful Call (timeout)
 >
->\* - IP was reached and a web server responded, but with unexpected data or an error (e.g. 404)
+>\* (asterisk) - IP was reached and a web server responded, but with unexpected data or an error (e.g. 404)
 
 Each call to the web server is also recorded locally, in the %temp% directory, in two XML files.
 -AvailabilityHeader.xml
@@ -116,18 +116,14 @@ This function will open a web browser on the local Client PC to display the Get-
 ### Removing the Azure Connectivity Toolkit
 Once testing is complete the Azure VM should be deleted to avoid unnecessary Azure usage (and associated charges) and all local files can be deleted. There is nothing permanently installed, only the PowerShell module files copied from GitHub and potentially the two XML files in the Local Client PC %temp% directory. 
 
-To ensure 100% removal of all artifacts from this tool perform the following steps:
+To ensure 100% removal of all artifacts from this tool perform the following step:
 
 1. Run the Remove-AzureCT command from PowerShell. This will remove the PowerShell module and any local data files.
 
-
-<<<<<<< HEAD
 ## History
 2016-02-03 - Initial beta release 1.6.0.1
 2016-02-07 - Updated beta release 1.6.0.2 
 
-=======
->>>>>>> master
 ## Incorporated Licenses
 This tool incorporates [JQuery](https://jquery.org/license/ "JQuery License") for XML manipulation and is included in the ServerSide files. JQuery.js is included and used under the requirements of the MIT License, and in compliance with the main JQuery license proviso "*You are free to use any jQuery Foundation project in any other project (even commercial projects) as long as the copyright header is left intact.*"
 
@@ -145,7 +141,4 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLU
 [Ten Hour]: ./media/RunTenHour.md
 [Errors]: ./media/RunErrors.md
 [Timeout]: ./media/RunTimeout.md
-<<<<<<< HEAD
 [MSDN]: https://technet.microsoft.com/en-us/library/hh849812.aspx
-=======
->>>>>>> master
