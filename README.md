@@ -118,14 +118,12 @@ Once testing is complete the Azure VM should be deleted to avoid unnecessary Azu
 
 To ensure 100% removal of all artifacts from this tool perform the following steps:
 
-1. Run the Clear-AzureCTHistory command from PowerShell (the Remote-Host parameter is optional and not required) to delete any temporary files created.
-2. Delete the Azure VM, and any other associated Azure resources created to run these tests.
-3. On the local PC, delete the AzureCT directory and all files and subdirectories therein; these can be found in the "%USERPROFILE%\Documents\WindowsPowerShell\Modules" folder (e.g. for me this is "C:\Users\tracsman\Documents\WindowsPowerShell\Modules").  
+1. Run the Remove-AzureCT command from PowerShell. This will remove the PowerShell module and any local data files.
 
 
 ## History
-2016-02-03 - Initial beta release, version 0.5.
-2016-02-07 - Updated beta release, version 
+2016-02-03 - Initial beta release 1.6.0.1
+2016-02-07 - Updated beta release 1.6.0.2 
 
 ## Incorporated Licenses
 This tool incorporates [JQuery](https://jquery.org/license/ "JQuery License") for XML manipulation and is included in the ServerSide files. JQuery.js is included and used under the requirements of the MIT License, and in compliance with the main JQuery license proviso "*You are free to use any jQuery Foundation project in any other project (even commercial projects) as long as the copyright header is left intact.*"
