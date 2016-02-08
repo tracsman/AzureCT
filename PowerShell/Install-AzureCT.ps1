@@ -40,7 +40,7 @@ function Install-AzureCT {
     }
     Else {
         # ensure AzureCT is imported from the location it was just installed to
-        Import-Module -Name AzureCT
+        # Import-Module -Name AzureCT
     }
     Write-Host "AzureCT is installed and ready to use" -Foreground Green
     Write-Host
