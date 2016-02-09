@@ -120,6 +120,10 @@ To ensure 100% removal of all artifacts from this tool perform the following ste
 
 1. Run the Remove-AzureCT command from PowerShell. This will remove the PowerShell module and any local data files.
 
+	```powershell
+	Remove-AzureCT
+	```
+
 ## History
 2016-02-03 - Initial beta release 1.6.0.1
 2016-02-07 - Updated beta release 1.6.0.2 
