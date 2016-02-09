@@ -125,8 +125,9 @@ To ensure 100% removal of all artifacts from this tool perform the following ste
 	```
 
 ## History
-2016-02-03 - Initial beta release 1.6.0.1
-2016-02-07 - Updated beta release 1.6.0.2 
+
+ - 2016-02-03 - Initial beta release 1.6.0.1
+ - 2016-02-07 - Updated beta release 1.6.0.2
 
 ## Incorporated Licenses
 This tool incorporates [JQuery](https://jquery.org/license/ "JQuery License") for XML manipulation and is included in the ServerSide files. JQuery.js is included and used under the requirements of the MIT License, and in compliance with the main JQuery license proviso "*You are free to use any jQuery Foundation project in any other project (even commercial projects) as long as the copyright header is left intact.*"
