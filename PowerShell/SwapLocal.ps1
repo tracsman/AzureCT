@@ -5,5 +5,4 @@ Remove-Module AzureCT
 If (Test-Path $Old) {Remove-Item $Old -Recurse}
 Copy-Item $New -Destination $Old -Recurse
 Install-Module AzureCT
-
-Get-Module
+Write-Host "Swap Complete" -ForegroundColor Green
