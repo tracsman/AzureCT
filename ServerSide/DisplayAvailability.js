@@ -231,7 +231,7 @@ function showTrace(JobID, CallID) {
         myHTMLOutput = 'Select Trace Route';
         myHTMLOutput += '<table id="TraceTable">';
         myHTMLOutput += '<tr>';
-        myHTMLOutput += '<th id="HopID">Hop No</th>';
+        myHTMLOutput += '<th id="HopID">Hop #</th>';
         myHTMLOutput += '<th id="Address">IP Address</th>';
         myHTMLOutput += '<th id="Latency">Latency</th>';
         myHTMLOutput += '<th id="HostName">Host Name</th>';

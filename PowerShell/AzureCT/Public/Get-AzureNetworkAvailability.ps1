@@ -81,6 +81,7 @@
     $RunDuration = New-TimeSpan -Minutes $DurationMinutes
     $GoodTraceCaptured = $false
     [int]$MinutesBetweenTracePulls = 1
+    $LastTraceTime = (Get-Date) - (New-TimeSpan -Minutes $MinutesBetweenTracePulls)
     [int]$ReferenceTraceID = 0
     [int]$CallCount=0
     [int]$JobGood=0

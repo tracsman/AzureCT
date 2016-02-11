@@ -42,8 +42,6 @@
         $TraceStatus = $Response.Status
         If ($TraceStatus -eq 'Success') {
             $Trace.MachineName   = Get-HostName $Trace.Address
-            Write-Output -InputObject $Trace
-            Break
         }
         ElseIf ($TraceStatus -eq 'TtlExpired') {
             $PingOptions.Ttl = $i + 2
@@ -78,6 +76,8 @@
             $TraceFile.Save($TraceFileName)
         }
         
+        If ($TraceStatus -eq 'Success') {Break}
+
         $i++
     } # End While
 
