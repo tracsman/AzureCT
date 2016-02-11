@@ -82,19 +82,8 @@
 
 } # End Function
 
-function Get-HostName {
-    param (
-        [Parameter(Mandatory = $true, ValueFromPipeline=$true, HelpMessage='Enter IP Address')]
-        [ipaddress] $HostIP)
-    Try {
-        Return [System.Net.Dns]::GetHostEntry($HostIP).HostName
-    }
-    Catch {
-        Return ''
-    }
-}
 
-Get-IPTrace -RemoteHost 10.249.172.52 -JobID $JobID -CallID 7
+# Get-IPTrace -RemoteHost 10.249.172.52 -JobID $JobID -CallID 7
 
 # $Ping = New-Object -TypeName System.Net.NetworkInformation.Ping
 # $PingOptions = New-Object -TypeName System.Net.NetworkInformation.PingOptions

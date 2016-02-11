@@ -11,8 +11,11 @@ function Install-AzureCT {
     $FileName += 'AzureCT.psm1'
     $FileName += 'Public/Clear-AzureCTHistory.ps1'
     $FileName += 'Public/Get-AzureNetworkAvailability.ps1'
-    $FileName += 'Public/Show-AzureCTResults.ps1'
+    $FileName += 'Public/Get-HostName.ps1'
+    $FileName += 'Public/Get-IPTrace.ps1'
     $FileName += 'Public/Remove-AzureCT.ps1'
+    $FileName += 'Public/Show-AzureCTResults.ps1'
+    
    
     $Destination = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath 'WindowsPowerShell\Modules\AzureCT\'
     New-Item -Path ($Destination) -ItemType Directory -Force | Out-Null
