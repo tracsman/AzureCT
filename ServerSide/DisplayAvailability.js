@@ -178,7 +178,7 @@ function PullJobDetails() {
                 myHTMLOutput += '<td>' + callDisplay + '</td>';
                 myHTMLOutput += '<td>' + Math.round(callDuration) + ' ms</td>';
                 if (callTagged == 'True') {
-                    myHTMLOutput += "<td><a href=showTrace('" + jobID + "','" + callID + "')>View Trace</a></td>";
+                    myHTMLOutput += "<td><a href=javascript:showTrace('" + jobID + "','" + callID + "')>View Trace</a></td>";
                 }
                 else {
                     myHTMLOutput += '<td>&nbsp;</td>';
