@@ -80,6 +80,7 @@
     $JobSchemaVersion = "1.7"
     $RunDuration = New-TimeSpan -Minutes $DurationMinutes
     $GoodTraceCaptured = $false
+    [int]$MinutesBetweenTracePulls = 1
     [int]$ReferenceTraceID = 0
     [int]$CallCount=0
     [int]$JobGood=0
@@ -168,13 +169,14 @@
 
             # Do we need to trace?
             If (-Not $GoodTraceCaptured -and $Valid) {
-                Start-Job -ScriptBlock {Get-IPTrace -RemoteHost $RemoteHost -JobID $JobID -CallID $CallCount} -Name 'AzureCT.Tracing' | Out-Null
+                Start-Job -ScriptBlock {Get-IPTrace -RemoteHost $args[0] -JobID $args[1] -CallID $args[2]} -Name 'AzureCT.Tracing' -ArgumentList $RemoteHost, $JobID, $CallCount | Out-Null
                 $GoodTraceCaptured = $true
                 $ReferenceTraceID = $CallCount
                 $Tagged = $true
             }
-            ElseIf (-Not $Valid) {
-                Start-Job -ScriptBlock {Get-IPTrace -RemoteHost $RemoteHost -JobID $JobID -CallID $CallCount} -Name 'AzureCT.Tracing' | Out-Null
+            ElseIf (-Not $Valid -and $LastTraceTime -lt (Get-Date) - (New-TimeSpan -Minutes $MinutesBetweenTracePulls)) {
+                Start-Job -ScriptBlock {Get-IPTrace -RemoteHost $args[0] -JobID $args[1] -CallID $args[2]} -Name 'AzureCT.Tracing' -ArgumentList $RemoteHost, $JobID, $CallCount | Out-Null
+                $LastTraceTime = Get-Date
                 $Tagged = $true
             }
             Else {
@@ -283,6 +285,10 @@
         $JobHeaderFile.Save("$FilePath\AvailabilityHeader.xml")
 
         # Wait for traces to finish
+        While ((Get-Job -Name "AzureCT.Tracing" | Where State -eq 'Running').Count -gt 0) {
+            Sleep -Seconds 2
+            Write-Host "Waiting for Trace Route jobs to finish..."
+        }
 
         # Upload Header and Detail xml to server
         $uri = "http://$RemoteHost/Upload.aspx"
@@ -294,10 +300,11 @@
             $header = @{FileID = "Detail"}
             $DetailUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobDetailFile.OuterXml -Headers $header -TimeoutSec 15).Content.Trim()
 
-            [xml]$TraceFile = Get-Content "$FilePath\AvailabilityTrace.xml"
             $header = @{FileID = "Trace"}
-            $TraceUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $TraceFile.OuterXml -Headers $header -TimeoutSec 10).Content.Trim()
-
+            ForEach ($TraceFileName in (Get-ChildItem -Path $FilePath -Filter "AvailabilityTrace*.xml").Name) {
+                [xml]$TraceFile = Get-Content "$FilePath\$TraceFileName"
+                $TraceUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $TraceFile.OuterXml -Headers $header -TimeoutSec 10).Content.Trim()
+            }
         }
         Catch {
             $HeaderUploadResponse = "Bad"
@@ -317,7 +324,7 @@
             # Clean up local files 
             Remove-Item "$FilePath\AvailabilityHeader.xml"
             Remove-Item "$FilePath\AvailabilityDetail.xml"
-            Remove-Item "$FilePath\AvailabilityTrace.xml"
+            Remove-Item "$FilePath\AvailabilityTrace*.xml"
         } 
         Else {
             Write-Warning "Data upload to remote server failed."
@@ -327,3 +334,4 @@
         Write-Host
     } # Finally End
 } # Function End
+

@@ -16,15 +16,16 @@
     }
     Else {
         $WriteFile = $true
+        $TraceFileName = "$FilePath\AvailabilityTrace_$CallID.xml"
     }
 
     # Check for Trace File
     If ($WriteFile) {
-        If ((Test-Path "$FilePath\AvailabilityTrace.xml") -eq $false) {
+        If ((Test-Path $TraceFileName) -eq $false) {
             [string]$TraceFile = "<?xml version=`"1.0`"?><TraceRecords version=`"$JobSchemaVersion`"><TraceRecord><JobID/><CallID/><TimeStamp/><HopID/><Address/><TripTime/><MachineName/></TraceRecord></TraceRecords>"
-            $TraceFile | Out-File -FilePath "$FilePath\AvailabilityTrace.xml" -Encoding ascii
+            $TraceFile | Out-File -FilePath $TraceFileName -Encoding ascii
         }
-        [xml]$TraceFile = Get-Content "$FilePath\AvailabilityTrace.xml"
+        [xml]$TraceFile = Get-Content $TraceFileName
     }
 
     $i = 1
@@ -69,12 +70,12 @@
             $TraceRecord.JobID =[string]$JobID
             $TraceRecord.CallID =[string]$CallID
             $TraceRecord.TimeStamp = [string]$TraceStart
-            $TraceRecord.HopID = [string]$Trace.TTL
+            $TraceRecord.HopID = [string]$Trace.HopCount
             $TraceRecord.Address = [string]$Trace.Address
             $TraceRecord.TripTime = [string]$Trace.RoundTripTime
             $TraceRecord.MachineName = [string]$Trace.MachineName
             $TraceFile.TraceRecords.AppendChild($TraceRecord) | Out-Null
-            $TraceFile.Save("$FilePath\AvailabilityTrace.xml")
+            $TraceFile.Save($TraceFileName)
         }
         
         $i++

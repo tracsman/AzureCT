@@ -136,6 +136,7 @@ function PullJobDetails() {
         myHTMLOutput += '<th id=time>Time Stamp</th>'
         myHTMLOutput += '<th id=display>Remarks</th>'
         myHTMLOutput += '<th id=duration>Duration</th>'
+        myHTMLOutput += '<th id=trace>Trace</th>'
         myHTMLOutput += '</thead>';
 
         var t1 = new Date(currentStartTime);
@@ -156,6 +157,7 @@ function PullJobDetails() {
                 callDisplay = $(this).find('Display').text();
                 callValid = $(this).find('Valid').text();
                 callDuration = $(this).find('Duration').text();
+                callTagged = $(this).find('Tag').text();
 
                 // Calculate X position
                 var thisTime = new Date(callTimeStamp);
@@ -175,6 +177,12 @@ function PullJobDetails() {
                 myHTMLOutput += '<td>' + dateString(thisTime, 'withMilli') + '</td>';
                 myHTMLOutput += '<td>' + callDisplay + '</td>';
                 myHTMLOutput += '<td>' + Math.round(callDuration) + ' ms</td>';
+                if (callTagged == 'True') {
+                    myHTMLOutput += "<td><a onclick=showTrace('" + jobID + "','" + callID + "')>View Trace</a></td>";
+                }
+                else {
+                    myHTMLOutput += '<td>&nbsp;</td>';
+                };
                 myHTMLOutput += '</tr>';
 
                 // Build graph array
@@ -216,7 +224,53 @@ function PullJobDetails() {
 };
 
 function showTrace(JobID, CallID) {
-    alert('Some one wants a trace!')
+    // Open the AvailabilityHeader.xml file
+    $.get('AvailabilityTrace.xml', {}, function (xml) {
+
+        // Define HTML string Var
+        myHTMLOutput = 'Select Trace Route';
+        myHTMLOutput += '<table id="TraceTable">';
+        myHTMLOutput += '<tr>';
+        myHTMLOutput += '<th id="HopID">Hop No</th>';
+        myHTMLOutput += '<th id="Address">IP Address</th>';
+        myHTMLOutput += '<th id="Latency">Latency</th>';
+        myHTMLOutput += '<th id="HostName">Host Name</th>';
+        myHTMLOutput += '</tr>';
+
+
+        // Run the function for each Trace in xml file
+        $('TraceRecord', xml).each(function (i) {
+
+            traceJobID = $(this).find('JobID').text();
+            traceCallID = $(this).find('CallID').text();
+
+            // Pull Job Header info into variables
+            if (traceJobID == JobID && traceCallID == CallID) {
+                traceTimeStamp = $(this).find('TimeStamp').text();
+                traceHopID = $(this).find('HopID').text();
+                traceAddress = $(this).find('Address').text();
+                traceTripTime = $(this).find('TripTime').text();
+                traceMachineName = $(this).find('MachineName').text();
+
+                myHTMLOutput += '<tr>';
+                myHTMLOutput += '<td>' + traceHopID + '</td>';
+                myHTMLOutput += '<td>' + traceAddress + '</td>';
+                myHTMLOutput += '<td>' + traceTripTime + '</td>';
+                myHTMLOutput += '<td>' + traceMachineName + '</td>';
+                myHTMLOutput += '</tr>';
+
+
+            };
+        });
+
+        myHTMLOutput += '</table>';
+        myHTMLOutput += '<br />';
+        myHTMLOutput += '<button style="position:absolute; right:50px;" onclick="closeTrace();">Close</button>';
+        myHTMLOutput += '<br />';
+        myHTMLOutput += '<br />';
+        $("#TraceDiv").html(myHTMLOutput);
+        document.getElementById('TraceDiv').style.visibility = 'visible';
+    });
 };
 
 function closeTrace() {

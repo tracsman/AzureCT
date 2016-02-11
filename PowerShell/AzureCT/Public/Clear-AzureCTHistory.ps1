@@ -63,4 +63,18 @@
     else {
         Write-Host "No Get-AzureNetworkAvailability detail data was found on this computer." -ForegroundColor Green
     }
+
+    $fileDetail = "$env:TEMP\AvailabilityTrace*.xml"
+    If (Test-Path $fileDetail) {
+        try {
+            Remove-Item -Path $fileDetail -Force
+            Write-Host "Local Get-AzureNetworkAvailability detail data was cleared from this computer." -ForegroundColor Green
+        }
+        catch {
+            Write-Warning "Local Get-AzureNetworkAvailability detail data was not cleared from this computer."
+        }
+    }
+    else {
+        Write-Host "No Get-AzureNetworkAvailability detail data was found on this computer." -ForegroundColor Green
+    }
 } # End Function

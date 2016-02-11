@@ -7,7 +7,7 @@
     <script type="text/javascript" src="DisplayAvailability.js"></script>
     <link rel="stylesheet" type="text/css" href="DisplayAvailability.css" />
 </head>
-<body onclick="closeTrace();">
+<body>
     <div><h1>Azure Connectivity Toolkit - Availability Tool</h1></div>
     <div><h3>This page shows the details of any Get-AzureNetworkAvailability job submitted to this server, based on the specific data set selected in the drop down.</h3></div>
     <div>Select an Availaibity data set to see details: 
@@ -26,61 +26,7 @@
         <p>Data Loading</p>
         <p>Please Wait...</p>
     </div>
-    <div id="TraceDiv">
-        Selected Trace Route
-        <table id="TraceTable">
-            <tr>
-                <th id="HopID">Hop No</th>
-                <th id="Address">IP Address</th>
-                <th id="Latency">Latency</th>
-                <th id="HostName">Host Name</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>10.91.60.2</td>
-                <td><1 ms</td>
-                <td>cusred042ca901-tengige0-007-13.network.microsoft.com</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>10.200.172.102</td>
-                <td>< 1 ms</td>
-                <td>cusred028ca910-tengige0-106.network.microsoft.com</td>
-            </tr>
-            <tr>
-                <td>11</td>
-                <td>888.888.888.888</td>
-                <td>8888 ms</td>
-                <td>cussclsa0ca9a1-bundle-ether64-3200.network.microsoft.com</td>
-            </tr>
-        </table>
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        asdf<br />
-        <button style="position:absolute; right:50px;" onclick="closeTrace();">Close</button>
-        <br />
-        <br />
-    </div>
+    <div id="TraceDiv"></div>
     <br />
-
 </body>
 </html>
