@@ -49,23 +49,29 @@
         font-size: x-large;
         border: double;
         visibility: hidden;
+        z-index: 10;
     }
     
     #TraceDiv {
         position: fixed;
-        width: 900px;
+        width: 375px;
         top: 150px;
-        left: 100px;
+        left: 323px;
         padding: 10px;
         height: 400px;
-        background-color: antiquewhite;
+        background-color: #eeeeee;
         border:double;
         overflow-y:scroll;
-        visibility:hidden;
+        visibility:visible;
+        z-index: 3;
     }
     #TraceTable td:nth-child(4) {padding-left: 20px;
                                  text-align:left;}
     th#HopID {width:60px;}
     th#Address {width:140px;}
     th#Latency {width:80px;}
-    th#HostName {width:504px;}
+    #TraceTable tr:nth-child(even) {background: #c2e1ff}
+    #TraceTable tr:nth-child(odd) {background:  #cce9ff}
+
+    span {font-size:small;}
+    .b {font-weight:bold;}

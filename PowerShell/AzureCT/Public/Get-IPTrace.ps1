@@ -7,7 +7,6 @@
         [int]$CallID=0)
 
     $FilePath = $env:TEMP
-    $XMLSchemaVersion = "1.6"
     $Ping = New-Object -TypeName System.Net.NetworkInformation.Ping
     $PingOptions = New-Object -TypeName System.Net.NetworkInformation.PingOptions
     $Payload = [byte[]][char[]]'MyData'
@@ -22,7 +21,7 @@
     # Check for Trace File
     If ($WriteFile) {
         If ((Test-Path $TraceFileName) -eq $false) {
-            [string]$TraceFile = "<?xml version=`"1.0`"?><TraceRecords version=`"$JobSchemaVersion`"><TraceRecord><JobID/><CallID/><TimeStamp/><HopID/><Address/><TripTime/><MachineName/></TraceRecord></TraceRecords>"
+            [string]$TraceFile = "<?xml version=`"1.0`"?><TraceRecords version=`"$script:XMLSchemaVersion`"><TraceRecord><JobID/><CallID/><TimeStamp/><HopID/><Address/><TripTime/></TraceRecord></TraceRecords>"
             $TraceFile | Out-File -FilePath $TraceFileName -Encoding ascii
         }
         [xml]$TraceFile = Get-Content $TraceFileName
@@ -32,27 +31,21 @@
     while ($i -le 30) {
         $TraceStart = Get-Date -Format 'yyyy-MM-ddTHH:mm:ss.fff'
         $PingOptions.Ttl = $i
-        $Response = $Ping.Send($RemoteHost, 1500, $Payload, $PingOptions)
+        $Response = $Ping.Send($RemoteHost, 500, $Payload, $PingOptions)
         $Trace = New-Object -TypeName PSObject -Property @{
             HopCount      = $PingOptions.Ttl;
             Address       = $Response.Address;
-            RoundTripTime = $Response.RoundtripTime;
-            MachineName   = ''
+            RoundTripTime = $Response.RoundtripTime
             }
         $TraceStatus = $Response.Status
-        If ($TraceStatus -eq 'Success') {
-            $Trace.MachineName   = Get-HostName $Trace.Address
-        }
-        ElseIf ($TraceStatus -eq 'TtlExpired') {
+        If ($TraceStatus -eq 'TtlExpired') {
             $PingOptions.Ttl = $i + 2
-            $Response = $Ping.Send($Trace.Address, 1500, $Payload, $PingOptions)
+            $Response = $Ping.Send($Trace.Address, 500, $Payload, $PingOptions)
             If ($Response.Status -eq 'TimedOut') {
-                $Trace.MachineName   = Get-HostName $Trace.Address
                 $Trace.RoundTripTime = '*'
             }
             Else {
                 $Trace.RoundTripTime = $Response.RoundtripTime
-                $Trace.MachineName   = Get-HostName $Trace.Address
             }
         }
         ElseIf ($TraceStatus -eq 'TimedOut') {
@@ -71,7 +64,6 @@
             $TraceRecord.HopID = [string]$Trace.HopCount
             $TraceRecord.Address = [string]$Trace.Address
             $TraceRecord.TripTime = [string]$Trace.RoundTripTime
-            $TraceRecord.MachineName = [string]$Trace.MachineName
             $TraceFile.TraceRecords.AppendChild($TraceRecord) | Out-Null
             $TraceFile.Save($TraceFileName)
         }
@@ -82,12 +74,3 @@
     } # End While
 
 } # End Function
-
-
-# Get-IPTrace -RemoteHost 10.249.172.52 -JobID $JobID -CallID 7
-
-# $Ping = New-Object -TypeName System.Net.NetworkInformation.Ping
-# $PingOptions = New-Object -TypeName System.Net.NetworkInformation.PingOptions
-# $PingOptions.Ttl = 12
-# $Payload = [byte[]][char[]]'MyData1'
-# $foo = $Ping.Send('10.249.172.52', 1000, $Payload, $PingOptions)

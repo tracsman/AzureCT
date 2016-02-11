@@ -77,7 +77,6 @@
 
     # Initialize
     $FilePath = $env:TEMP
-    $JobSchemaVersion = "1.7"
     $RunDuration = New-TimeSpan -Minutes $DurationMinutes
     $GoodTraceCaptured = $false
     [int]$MinutesBetweenTracePulls = 1
@@ -94,12 +93,12 @@
 
     # Check for Header File
     If ((Test-Path "$FilePath\AvailabilityHeader.xml") -eq $false) {
-        [string]$JobHeaderFile = "<?xml version=`"1.0`"?><Jobs version=`"$JobSchemaVersion`"><Job><ID/><StartTime/><EndTime/><Target/><TimeoutSeconds/><CallCount/><SuccessRate/><JobMin/><JobMax/><JobMedian/><ReferenceTrace/></Job></Jobs>"
+        [string]$JobHeaderFile = "<?xml version=`"1.0`"?><Jobs version=`"$script:XMLSchemaVersion`"><Job><ID/><StartTime/><EndTime/><Target/><TimeoutSeconds/><CallCount/><SuccessRate/><JobMin/><JobMax/><JobMedian/><ReferenceTrace/></Job></Jobs>"
         $JobHeaderFile | Out-File -FilePath "$FilePath\AvailabilityHeader.xml" -Encoding ascii}
 
     # Check for Detail File
     If ((Test-Path "$FilePath\AvailabilityDetail.xml") -eq $false) {
-        [string]$JobDetailFile = "<?xml version=`"1.0`"?><JobRecords version=`"$JobSchemaVersion`"><JobRecord><JobID/><CallID/><TimeStamp/><Return/><Display/><Valid/><Duration/><Tag/></JobRecord></JobRecords>"
+        [string]$JobDetailFile = "<?xml version=`"1.0`"?><JobRecords version=`"$script:XMLSchemaVersion`"><JobRecord><JobID/><CallID/><TimeStamp/><Return/><Display/><Valid/><Duration/><Tag/></JobRecord></JobRecords>"
         $JobDetailFile | Out-File -FilePath "$FilePath\AvailabilityDetail.xml" -Encoding ascii}
 
     # Load Files and Get Ready for new run
@@ -158,7 +157,8 @@
                 $WebCall = ""
                 $CallDuration = ""
                 $ServerTime = ""
-                $Result = $error[0].Exception.Message.ToString()
+                Try {$Result = $error[0].Exception.Message.ToString()}
+                Catch {$Result = "Unknown Error"}
             }
             # Validate Server Return
             $Valid = [bool]($Result.Trim() -eq '1.0')

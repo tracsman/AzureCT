@@ -178,7 +178,7 @@ function PullJobDetails() {
                 myHTMLOutput += '<td>' + callDisplay + '</td>';
                 myHTMLOutput += '<td>' + Math.round(callDuration) + ' ms</td>';
                 if (callTagged == 'True') {
-                    myHTMLOutput += "<td><a onclick=showTrace('" + jobID + "','" + callID + "')>View Trace</a></td>";
+                    myHTMLOutput += "<td><a href=showTrace('" + jobID + "','" + callID + "')>View Trace</a></td>";
                 }
                 else {
                     myHTMLOutput += '<td>&nbsp;</td>';
@@ -228,13 +228,12 @@ function showTrace(JobID, CallID) {
     $.get('AvailabilityTrace.xml', {}, function (xml) {
 
         // Define HTML string Var
-        myHTMLOutput = 'Select Trace Route';
+        myHTMLOutput = '<span class="b">Select Trace Route</span>';
         myHTMLOutput += '<table id="TraceTable">';
         myHTMLOutput += '<tr>';
         myHTMLOutput += '<th id="HopID">Hop #</th>';
         myHTMLOutput += '<th id="Address">IP Address</th>';
         myHTMLOutput += '<th id="Latency">Latency</th>';
-        myHTMLOutput += '<th id="HostName">Host Name</th>';
         myHTMLOutput += '</tr>';
 
 
@@ -250,13 +249,11 @@ function showTrace(JobID, CallID) {
                 traceHopID = $(this).find('HopID').text();
                 traceAddress = $(this).find('Address').text();
                 traceTripTime = $(this).find('TripTime').text();
-                traceMachineName = $(this).find('MachineName').text();
 
                 myHTMLOutput += '<tr>';
                 myHTMLOutput += '<td>' + traceHopID + '</td>';
                 myHTMLOutput += '<td>' + traceAddress + '</td>';
                 myHTMLOutput += '<td>' + traceTripTime + '</td>';
-                myHTMLOutput += '<td>' + traceMachineName + '</td>';
                 myHTMLOutput += '</tr>';
 
 
@@ -265,9 +262,20 @@ function showTrace(JobID, CallID) {
 
         myHTMLOutput += '</table>';
         myHTMLOutput += '<br />';
+        myHTMLOutput += '';
         myHTMLOutput += '<button style="position:absolute; right:50px;" onclick="closeTrace();">Close</button>';
         myHTMLOutput += '<br />';
         myHTMLOutput += '<br />';
+
+        myHTMLOutput += '<span class="b">Notes:</span><br />';
+        myHTMLOutput += '<span">The maximum trace route time will normally be less than the Duration value on the main web page. This is because the trace route is only calculating network latency, whereas the Duration column includes the processing time of the IIS server.</span>';
+        myHTMLOutput += '<br /><br />';
+        myHTMLOutput += '<span">This trace route was started <span class="b">*after*</span> the associated web call was completed. Network conditions may have changed in the short time span between the Web Call and the Trace Route. Also, each trace route row is a separate network trace, network conditions can vary between each trace event as well.</span>';
+        myHTMLOutput += '<br />';
+        myHTMLOutput += '<br />';
+
+
+
         $("#TraceDiv").html(myHTMLOutput);
         document.getElementById('TraceDiv').style.visibility = 'visible';
     });
