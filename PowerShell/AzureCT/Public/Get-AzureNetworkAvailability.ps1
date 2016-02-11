@@ -77,8 +77,10 @@
 
     # Initialize
     $FilePath = $env:TEMP
-    $JobSchemaVersion = "1.6"
+    $JobSchemaVersion = "1.7"
     $RunDuration = New-TimeSpan -Minutes $DurationMinutes
+    $GoodTraceCaptured = $false
+    [int]$ReferenceTraceID = 0
     [int]$CallCount=0
     [int]$JobGood=0
     [int]$JobBad=0
@@ -90,12 +92,12 @@
 
     # Check for Header File
     If ((Test-Path "$FilePath\AvailabilityHeader.xml") -eq $false) {
-        [string]$JobHeaderFile = "<?xml version=`"1.0`"?><Jobs version=`"$JobSchemaVersion`"><Job><ID/><StartTime/><EndTime/><Target/><TimeoutSeconds/><CallCount/><SuccessRate/><JobMin/><JobMax/><JobMedian/></Job></Jobs>"
+        [string]$JobHeaderFile = "<?xml version=`"1.0`"?><Jobs version=`"$JobSchemaVersion`"><Job><ID/><StartTime/><EndTime/><Target/><TimeoutSeconds/><CallCount/><SuccessRate/><JobMin/><JobMax/><JobMedian/><ReferenceTrace/></Job></Jobs>"
         $JobHeaderFile | Out-File -FilePath "$FilePath\AvailabilityHeader.xml" -Encoding ascii}
 
     # Check for Detail File
     If ((Test-Path "$FilePath\AvailabilityDetail.xml") -eq $false) {
-        [string]$JobDetailFile = "<?xml version=`"1.0`"?><JobRecords version=`"$JobSchemaVersion`"><JobRecord><JobID/><CallID/><TimeStamp/><Return/><Display/><Valid/><Duration/></JobRecord></JobRecords>"
+        [string]$JobDetailFile = "<?xml version=`"1.0`"?><JobRecords version=`"$JobSchemaVersion`"><JobRecord><JobID/><CallID/><TimeStamp/><Return/><Display/><Valid/><Duration/><Tag/></JobRecord></JobRecords>"
         $JobDetailFile | Out-File -FilePath "$FilePath\AvailabilityDetail.xml" -Encoding ascii}
 
     # Load Files and Get Ready for new run
@@ -132,7 +134,7 @@
             $ErrorType = "None"
             $CallDisplay = "n" # Null, this should never show
             $CallDisplayDescription = "Null" # This should never show
-    
+
             # Call WebTest.aspx
              ###########################################
             #  The following line is the magic, it is   #
@@ -164,6 +166,21 @@
             Elseif ($ErrorType -eq "Timeout") {$CallDisplay="."; $CallDisplayDescription="Timeout"}
             Else {$CallDisplay="*"; $CallDisplayDescription="Call Response Error"}
 
+            # Do we need to trace?
+            If (-Not $GoodTraceCaptured -and $Valid) {
+                Start-Job -ScriptBlock {Get-IPTrace -RemoteHost $RemoteHost -JobID $JobID -CallID $CallCount} -Name 'AzureCT.Tracing' | Out-Null
+                $GoodTraceCaptured = $true
+                $ReferenceTraceID = $CallCount
+                $Tagged = $true
+            }
+            ElseIf (-Not $Valid) {
+                Start-Job -ScriptBlock {Get-IPTrace -RemoteHost $RemoteHost -JobID $JobID -CallID $CallCount} -Name 'AzureCT.Tracing' | Out-Null
+                $Tagged = $true
+            }
+            Else {
+                $Tagged = $false
+            }
+
             # Update Counters
             If ($Valid) {$JobGood+=1} Else {$JobBad+=1}
             [decimal]$SuccessRate = $JobGood/$CallCount*100
@@ -182,6 +199,7 @@
             $JobDetail.Display = $CallDisplayDescription
             $JobDetail.Valid = [string]$Valid
             $JobDetail.Duration = [string]$CallDuration.TotalMilliseconds
+            $JobDetail.Tag = [string]$Tagged
 
             # Log new results xml to local file
             $JobDetailFile.JobRecords.AppendChild($JobDetail) | Out-Null
@@ -195,7 +213,8 @@
                     $UpdatedNode.SuccessRate = [string]$SuccessRate
                     $UpdatedNode.JobMin = [string]$JobMin
                     $UpdatedNode.JobMax = [string]$JobMax
-                    $foo = $JobHeaderFile.Jobs.ReplaceChild($UpdatedNode, $Node)
+                    $UpdatedNode.ReferenceTrace = [string]$ReferenceTraceID
+                    $JobHeaderFile.Jobs.ReplaceChild($UpdatedNode, $Node) | Out-Null
                     }}
             $JobHeaderFile.Save("$FilePath\AvailabilityHeader.xml")
     
@@ -263,6 +282,8 @@
         }
         $JobHeaderFile.Save("$FilePath\AvailabilityHeader.xml")
 
+        # Wait for traces to finish
+
         # Upload Header and Detail xml to server
         $uri = "http://$RemoteHost/Upload.aspx"
         $contentType = "multipart/form-data"
@@ -271,15 +292,21 @@
             $HeaderUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobHeaderFile.OuterXml -Headers $header -TimeoutSec 10).Content.Trim()
 
             $header = @{FileID = "Detail"}
-            $DetailUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobDetailFile.OuterXml -Headers $header -TimeoutSec 10).Content.Trim()
+            $DetailUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $JobDetailFile.OuterXml -Headers $header -TimeoutSec 15).Content.Trim()
+
+            [xml]$TraceFile = Get-Content "$FilePath\AvailabilityTrace.xml"
+            $header = @{FileID = "Trace"}
+            $TraceUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $TraceFile.OuterXml -Headers $header -TimeoutSec 10).Content.Trim()
+
         }
         Catch {
             $HeaderUploadResponse = "Bad"
             $DetailUploadResponse = "Bad"
+            $TraceUploadResponse = "Bad"
         }
 
         Write-Host
-        If ($HeaderUploadResponse -eq "Good" -and $DetailUploadResponse -eq "Good") {
+        If ($HeaderUploadResponse -eq "Good" -and $DetailUploadResponse -eq "Good" -and $TraceUploadResponse -eq "Good") {
             Write-Host "Data uploaded to remote server sucessfully"
 
             # Spawn local web browser showing report details from server
@@ -289,7 +316,8 @@
             # Close and Clean Up
             # Clean up local files 
             Remove-Item "$FilePath\AvailabilityHeader.xml"
-            Remove-Item "$FilePath\AvailabilityDetail.xml" 
+            Remove-Item "$FilePath\AvailabilityDetail.xml"
+            Remove-Item "$FilePath\AvailabilityTrace.xml"
         } 
         Else {
             Write-Warning "Data upload to remote server failed."

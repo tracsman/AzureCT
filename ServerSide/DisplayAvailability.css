@@ -35,4 +35,35 @@
         #SummaryTable td:nth-child(4) {width: 200px;}
         #SummaryTable td:nth-child(5) {width: 130px;}
         #SummaryTable td:nth-child(6) {width: 230px;}
-        
+
+    #MessageDiv {
+        position: fixed;
+        width: 400px;
+        top: 200px;
+        left: 320px;
+        padding-top: 10px;
+        height: 150px;
+        background-color: antiquewhite;
+        text-align: center;
+        font-size: x-large;
+        border: double;
+        visibility: hidden;
+    }
+    
+    #TraceDiv {
+        position: fixed;
+        width: 900px;
+        top: 150px;
+        left: 100px;
+        padding: 10px;
+        height: 400px;
+        background-color: antiquewhite;
+        border:double;
+        overflow-y:scroll
+    }
+    #TraceTable td:nth-child(4) {padding-left: 20px;
+                                 text-align:left;}
+    th#HopID {width:60px;}
+    th#Address {width:140px;}
+    th#Latency {width:80px;}
+    th#HostName {width:504px;}

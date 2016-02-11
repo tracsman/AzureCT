@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<TraceRecords version="1.7">
+  <TraceRecord>
+    <JobID/>
+    <CallID/>
+    <TimeStamp/>
+    <HopID/>
+    <Address/>
+    <TripTime/>
+    <MachineName/>
+  </TraceRecord>
+</TraceRecords>

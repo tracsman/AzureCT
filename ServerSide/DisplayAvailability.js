@@ -51,6 +51,9 @@ function PullJobDetails() {
     // Define graph var
     var data = [];
 
+    // Set Data Loading Message to visible
+    document.getElementById('MessageDiv').style.visibility = 'visible';
+
     // Open the AvailabilityHeader.xml file
     $.get('AvailabilityHeader.xml', {}, function (xml) {
 
@@ -156,7 +159,7 @@ function PullJobDetails() {
 
                 // Calculate X position
                 var thisTime = new Date(callTimeStamp);
-                if (callID == 1) {
+                if (callID == 1 || callID == '') {
                     dif = 1;
                     pos = 1;
                     lastTime = thisTime;
@@ -207,6 +210,17 @@ function PullJobDetails() {
         myLineChart.drawLine(data, "blue", 1);
 
     });
+
+    // Set Data Loading Message to visible
+    document.getElementById('MessageDiv').style.visibility = 'hidden';
+};
+
+function showTrace(JobID, CallID) {
+    alert('Some one wants a trace!')
+};
+
+function closeTrace() {
+    document.getElementById('TraceDiv').style.visibility = 'hidden';
 };
 
 function pad(num) {
