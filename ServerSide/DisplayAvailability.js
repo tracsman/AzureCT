@@ -263,19 +263,15 @@ function showTrace(JobID, CallID) {
         myHTMLOutput += '</table>';
         myHTMLOutput += '<br />';
         myHTMLOutput += '';
-        myHTMLOutput += '<button style="position:absolute; right:50px;" onclick="closeTrace();">Close</button>';
+        myHTMLOutput += '<button style="position:absolute; right:45%;" onclick="closeTrace();">Close</button>';
         myHTMLOutput += '<br />';
         myHTMLOutput += '<br />';
-
         myHTMLOutput += '<span class="b">Notes:</span><br />';
         myHTMLOutput += '<span">The maximum trace route time will normally be less than the Duration value on the main web page. This is because the trace route is only calculating network latency, whereas the Duration column includes the processing time of the IIS server.</span>';
         myHTMLOutput += '<br /><br />';
         myHTMLOutput += '<span">This trace route was started <span class="b">*after*</span> the associated web call was completed. Network conditions may have changed in the short time span between the Web Call and the Trace Route. Also, each trace route row is a separate network trace, network conditions can vary between each trace event as well.</span>';
         myHTMLOutput += '<br />';
         myHTMLOutput += '<br />';
-
-
-
         $("#TraceDiv").html(myHTMLOutput);
         document.getElementById('TraceDiv').style.visibility = 'visible';
     });
