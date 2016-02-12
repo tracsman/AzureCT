@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TraceRecords version="1.8">
+<TraceRecords version="1.9">
   <TraceRecord>
     <JobID/>
     <CallID/>
@@ -7,6 +7,5 @@
     <HopID/>
     <Address/>
     <TripTime/>
-    <MachineName/>
   </TraceRecord>
 </TraceRecords>
