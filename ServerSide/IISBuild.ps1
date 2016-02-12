@@ -2,6 +2,9 @@
 # To kick me off from a URL run the following:
 # (new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/ServerSide/IISBuild.ps1") | Invoke-Expression
 
+$GitHubBranch = "vnext"
+$GitHUbRepo = "https://raw.githubusercontent.com/tracsman/AzureCT/$GitHubBranch/ServerSide/"
+
 # Must be run from an elevated PS prompt!
     If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Write-Warning "This script must be run As Administrator, please open a new PowerShell prompt using the Run As Administrator option and re-run this script."
@@ -46,7 +49,7 @@
     $FileName | ForEach{
         Try {
             $webClient = new-object System.Net.WebClient
-            $webClient.DownloadFile( "https://raw.githubusercontent.com/tracsman/AzureCT/vnext/ServerSide/" + $FileName[$i], "c:\inetpub\wwwroot\" + $FileName[$i] )
+            $webClient.DownloadFile($GitHUbRepo + $FileName[$i], "c:\inetpub\wwwroot\" + $FileName[$i] )
             Write-Host "Copied successfully:" $FileName[$i] 
         }
         Catch {
