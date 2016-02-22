@@ -187,6 +187,7 @@
             If (-Not $GoodTraceCaptured -and $Valid) {
                 $GoodTraceCaptured = $true
                 $ReferenceTraceID = $CallCount
+                $LastTraceTime = Get-Date
                 $Tagged = $true
             }
             ElseIf (-Not $Valid -and -Not $ErrorFlag) {
@@ -257,8 +258,6 @@
 
     Finally {
 
-        $Global:fooberry = $TraceArray
-
         # Calculate end of job stats
         $JobEnd = Get-Date -Format 's'
 
@@ -319,7 +318,7 @@
         # Build the Trace File for Upload
         ForEach ($Node in $JobDetailFile.JobRecords.JobRecord) {
             If ($Node.JobID -eq $JobID -and $Node.Tag -eq "True") {
-                $PSJobData = Receive-Job -Job $TraceArray[$Node.CallID]
+                $PSJobData = Receive-Job -Job $TraceArray[$Node.CallID - 1]
                 ForEach ($TraceRow in $PSJobData) {
                     $TraceNode =""
                     $TraceNode = (@($TraceFile.TraceRecords.TraceRecord)[0]).Clone()
@@ -329,11 +328,15 @@
                     $TraceNode.HopID = [string]$TraceRow.HopCount
                     $TraceNode.Address = [string]$TraceRow.Address
                     $TraceNode.TripTime = [string]$TraceRow.RoundTripTime
-                    $TraceFile.JobRecords.AppendChild($TraceNode) | Out-Null
+                    $TraceFile.TraceRecords.AppendChild($TraceNode) | Out-Null
                     $TraceFile.Save($TraceFileName)
                 } # End ForEach $TraceRow
             } # End If
         } # End ForEach $Node
+
+        ForEach ($Job in (Get-Job)) {
+           Remove-Job $Job
+        }
 
         # Upload Header, Detail, and Trace xml to server
         $uri = "http://$RemoteHost/Upload.aspx"
