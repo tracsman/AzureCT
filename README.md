@@ -115,7 +115,7 @@ There are five other commands that can be run:
 - Get-IPTrace
 - Remove-AzureCT
 
-Both Clear-AzureCTHistory and Show-AzureCTRecmdlets have a single input parameter:
+Both the Clear-AzureCTHistory and Show-AzureCTResults cmdlets have a single input parameter:
 - **RemoteHost** - This parameter is required for Show-AzureCTResults and optional for Clear-AzureCTHistory, for both scripts this parameter is the IP Address of the Azure VM copied in step 2 of the Installation Instructions above.
 
 #### Clear-AzureCTHistory
