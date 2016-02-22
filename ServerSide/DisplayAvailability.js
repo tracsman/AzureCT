@@ -253,10 +253,18 @@ function showTrace(JobID, CallID) {
                 myHTMLOutput += '<tr>';
                 myHTMLOutput += '<td>' + traceHopID + '</td>';
                 myHTMLOutput += '<td>' + traceAddress + '</td>';
-                myHTMLOutput += '<td>' + traceTripTime + '</td>';
+
+                switch (traceTripTime) {
+                    case '*':
+                        myHTMLOutput += '<td>*</td>';
+                        break;
+                    case '0':
+                        myHTMLOutput += '<td>< 1 ms</td>';
+                        break;
+                    default:
+                        myHTMLOutput += '<td>' + traceTripTime + ' ms</td>';
+                };
                 myHTMLOutput += '</tr>';
-
-
             };
         });
 

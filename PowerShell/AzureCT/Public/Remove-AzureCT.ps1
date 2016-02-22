@@ -1,6 +1,8 @@
 ﻿# Remove-AzureCT
 function Remove-AzureCT {
 
+    Clear-AzureCTHistory -ErrorAction SilentlyContinue
+
     $Destination = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath 'WindowsPowerShell\Modules\AzureCT'
     If (Test-Path $Destination) {
         Try {
@@ -18,8 +20,6 @@ function Remove-AzureCT {
         Write-Host "AzureCT PowerShell Module was not found on this machine."
     }
     
-    Clear-AzureCTHistory
-
     Remove-Module -Name AzureCT -ErrorAction SilentlyContinue
     Write-Host "AzureCT module unloaded from memory" -ForegroundColor Green
 
