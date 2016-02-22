@@ -2,7 +2,7 @@
 # To kick me off from a URL run the following:
 # (new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/ServerSide/IISBuild.ps1") | Invoke-Expression
 
-$GitHubBranch = "vnext"
+$GitHubBranch = "master"
 $GitHUbRepo = "https://raw.githubusercontent.com/tracsman/AzureCT/$GitHubBranch/ServerSide/"
 
 # Must be run from an elevated PS prompt!

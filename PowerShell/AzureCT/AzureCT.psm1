@@ -22,4 +22,3 @@ Export-ModuleMember -Function Get-IPTrace
 Export-ModuleMember -Function Clear-AzureCTHistory
 Export-ModuleMember -Function Show-AzureCTResults
 Export-ModuleMember -Function Remove-AzureCT
-Export-ModuleMember -Function Get-Test
