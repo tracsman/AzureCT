@@ -12,7 +12,7 @@ It is designed to provide an indication, over time, of the link between a Virtua
 >**Note**: This tool is not certified by Microsoft, nor is it supported by Microsoft support. Download and use at your own risk. While the author is an employee of Microsoft, this tool is provided as my best effort to provide insight into a customer's connectivity between an on-premise network and an Azure endpoint. See the [Support and Legal Disclaimers](#support-and-legal-disclaimers) below for more info.
 
 ## Fast Start
-If you just want to install the toolkit this is a the place to start:
+If you just want to install the toolkit, this is a the place to start:
 
 1. Create a new Windows Server Azure VM on an ExpressRoute connected VNet
 2. On the new Azure VM, in an elevated PowerShell Prompt, run the following command:  **(new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/ServerSide/IISBuild.ps1") | Invoke-Expression**
@@ -108,11 +108,14 @@ The drop down on that page will show all the data sets (by data and time) contai
 Selecting a specific data set will display the graph and detailed tabular data for that run, as well as the summary information.
 
 ### Other Tool Cmdlets
-There are two other commands that can be run:
+There are five other commands that can be run:
 - Clear-AzureCTHistory
 - Show-AzureCTResults
+- Get-HostName
+- Get-IPTrace
+- Remove-AzureCT
 
-Both cmdlets have a single input parameter:
+Both Clear-AzureCTHistory and Show-AzureCTRecmdlets have a single input parameter:
 - **RemoteHost** - This parameter is required for Show-AzureCTResults and optional for Clear-AzureCTHistory, for both scripts this parameter is the IP Address of the Azure VM copied in step 2 of the Installation Instructions above.
 
 #### Clear-AzureCTHistory
@@ -120,6 +123,16 @@ This function will delete any Get-AzureNetworkAvailability data on both the loca
 
 #### Show-AzureCTResults
 This function will open a web browser on the local Client PC to display the Get-AzureNetworkAvailability data saved to the remote Azure VM.
+
+#### Get-HomeName
+This function uses a passed in IP address and does a DNS Host Name look-up using the default DNS look-up setting of the machine it's run on.
+
+#### Get-IPTrace
+This function uses a passed in IP address and performs a Trace Route like function. It's output is for the main Get-AzureNetworkAvailability function. To make this more human readable, use the Format-Table option.
+
+```powershell
+Get-IPTrace 10.0.0.1 | Format-Table
+```
 
 ### Removing the Azure Connectivity Toolkit
 Once testing is complete the Azure VM should be deleted to avoid unnecessary Azure usage (and associated charges) and all local files can be deleted. There is nothing permanently installed, only the PowerShell module files copied from GitHub and potentially the two XML files in the Local Client PC %temp% directory. 
@@ -136,6 +149,7 @@ To ensure 100% removal of all artifacts from this tool perform the following ste
 
  - 2016-02-03 - Initial beta release 1.6.0.1
  - 2016-02-07 - Updated beta release 1.6.0.2
+ - 2016-02-22 - Added more funcitons and client side trace 1.9.0.1
 
 ## Incorporated Licenses
 This tool incorporates [JQuery](https://jquery.org/license/ "JQuery License") for XML manipulation and is included in the ServerSide files. JQuery.js is included and used under the requirements of the MIT License, and in compliance with the main JQuery license proviso "*You are free to use any jQuery Foundation project in any other project (even commercial projects) as long as the copyright header is left intact.*"
