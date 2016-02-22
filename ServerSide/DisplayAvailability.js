@@ -51,6 +51,9 @@ function PullJobDetails() {
     // Define graph var
     var data = [];
 
+    // Set Data Loading Message to visible
+    document.getElementById('MessageDiv').style.visibility = 'visible';
+
     // Open the AvailabilityHeader.xml file
     $.get('AvailabilityHeader.xml', {}, function (xml) {
 
@@ -133,6 +136,7 @@ function PullJobDetails() {
         myHTMLOutput += '<th id=time>Time Stamp</th>'
         myHTMLOutput += '<th id=display>Remarks</th>'
         myHTMLOutput += '<th id=duration>Duration</th>'
+        myHTMLOutput += '<th id=trace>Trace</th>'
         myHTMLOutput += '</thead>';
 
         var t1 = new Date(currentStartTime);
@@ -153,10 +157,11 @@ function PullJobDetails() {
                 callDisplay = $(this).find('Display').text();
                 callValid = $(this).find('Valid').text();
                 callDuration = $(this).find('Duration').text();
+                callTagged = $(this).find('Tag').text();
 
                 // Calculate X position
                 var thisTime = new Date(callTimeStamp);
-                if (callID == 1) {
+                if (callID == 1 || callID == '') {
                     dif = 1;
                     pos = 1;
                     lastTime = thisTime;
@@ -172,6 +177,12 @@ function PullJobDetails() {
                 myHTMLOutput += '<td>' + dateString(thisTime, 'withMilli') + '</td>';
                 myHTMLOutput += '<td>' + callDisplay + '</td>';
                 myHTMLOutput += '<td>' + Math.round(callDuration) + ' ms</td>';
+                if (callTagged == 'True') {
+                    myHTMLOutput += "<td><a href=javascript:showTrace('" + jobID + "','" + callID + "')>View Trace</a></td>";
+                }
+                else {
+                    myHTMLOutput += '<td>&nbsp;</td>';
+                };
                 myHTMLOutput += '</tr>';
 
                 // Build graph array
@@ -207,6 +218,67 @@ function PullJobDetails() {
         myLineChart.drawLine(data, "blue", 1);
 
     });
+
+    // Set Data Loading Message to visible
+    document.getElementById('MessageDiv').style.visibility = 'hidden';
+};
+
+function showTrace(JobID, CallID) {
+    // Open the AvailabilityHeader.xml file
+    $.get('AvailabilityTrace.xml', {}, function (xml) {
+
+        // Define HTML string Var
+        myHTMLOutput = '<span class="b">Select Trace Route</span>';
+        myHTMLOutput += '<table id="TraceTable">';
+        myHTMLOutput += '<tr>';
+        myHTMLOutput += '<th id="HopID">Hop #</th>';
+        myHTMLOutput += '<th id="Address">IP Address</th>';
+        myHTMLOutput += '<th id="Latency">Latency</th>';
+        myHTMLOutput += '</tr>';
+
+
+        // Run the function for each Trace in xml file
+        $('TraceRecord', xml).each(function (i) {
+
+            traceJobID = $(this).find('JobID').text();
+            traceCallID = $(this).find('CallID').text();
+
+            // Pull Job Header info into variables
+            if (traceJobID == JobID && traceCallID == CallID) {
+                traceTimeStamp = $(this).find('TimeStamp').text();
+                traceHopID = $(this).find('HopID').text();
+                traceAddress = $(this).find('Address').text();
+                traceTripTime = $(this).find('TripTime').text();
+
+                myHTMLOutput += '<tr>';
+                myHTMLOutput += '<td>' + traceHopID + '</td>';
+                myHTMLOutput += '<td>' + traceAddress + '</td>';
+                myHTMLOutput += '<td>' + traceTripTime + '</td>';
+                myHTMLOutput += '</tr>';
+
+
+            };
+        });
+
+        myHTMLOutput += '</table>';
+        myHTMLOutput += '<br />';
+        myHTMLOutput += '';
+        myHTMLOutput += '<button style="position:absolute; right:45%;" onclick="closeTrace();">Close</button>';
+        myHTMLOutput += '<br />';
+        myHTMLOutput += '<br />';
+        myHTMLOutput += '<span class="b">Notes:</span><br />';
+        myHTMLOutput += '<span">The maximum trace route time will normally be less than the Duration value on the main web page. This is because the trace route is only calculating network latency, whereas the Duration column includes the processing time of the IIS server.</span>';
+        myHTMLOutput += '<br /><br />';
+        myHTMLOutput += '<span">This trace route was started <span class="b">*after*</span> the associated web call was completed. Network conditions may have changed in the short time span between the Web Call and the Trace Route. Also, each trace route row is a separate network trace, network conditions can vary between each trace event as well.</span>';
+        myHTMLOutput += '<br />';
+        myHTMLOutput += '<br />';
+        $("#TraceDiv").html(myHTMLOutput);
+        document.getElementById('TraceDiv').style.visibility = 'visible';
+    });
+};
+
+function closeTrace() {
+    document.getElementById('TraceDiv').style.visibility = 'hidden';
 };
 
 function pad(num) {

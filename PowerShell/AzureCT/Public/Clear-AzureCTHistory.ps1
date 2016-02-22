@@ -36,31 +36,23 @@
 
     # Clear local data if files exist.
     Write-Host "Clearing data from local machine..." -ForegroundColor Cyan
-    $fileHeader = "$env:TEMP\AvailabilityHeader.xml"
-    If (Test-Path $fileHeader) {
-        try {
-            Remove-Item -Path $fileHeader -Force
-            Write-Host "Local Get-AzureNetworkAvailability summary data was cleared from this computer." -ForegroundColor Green
-        }
-        catch {
-            Write-Warning "Local Get-AzureNetworkAvailability summary data was not cleared from this computer."
-        }
-    }
-    else {
-        Write-Host "No Get-AzureNetworkAvailability summary data was found on this computer." -ForegroundColor Green
-    }
+    $FileList = @()
+    $FileList += "$env:TEMP\AvailabilityHeader.xml"
+    $FileList += "$env:TEMP\AvailabilityDetail.xml"
+    $FileList += "$env:TEMP\AvailabilityTrace.xml"
 
-    $fileDetail = "$env:TEMP\AvailabilityDetail.xml"
-    If (Test-Path $fileDetail) {
-        try {
-            Remove-Item -Path $fileDetail -Force
-            Write-Host "Local Get-AzureNetworkAvailability detail data was cleared from this computer." -ForegroundColor Green
+    ForEach ($File in $FileList) {
+        If (Test-Path "$env:TEMP\$File") {
+            try {
+                Remove-Item -Path "$env:TEMP\$File" -Force
+                Write-Host "$File was cleared from this computer." -ForegroundColor Green
+            }
+            catch {
+                Write-Warning "$env:TEMP\$File was not cleared from this computer."
+            }
         }
-        catch {
-            Write-Warning "Local Get-AzureNetworkAvailability detail data was not cleared from this computer."
-        }
-    }
-    else {
-        Write-Host "No Get-AzureNetworkAvailability detail data was found on this computer." -ForegroundColor Green
-    }
+        else {
+            Write-Host "$File was not found on this computer." -ForegroundColor Green
+        } # End If
+    } # End ForEach
 } # End Function

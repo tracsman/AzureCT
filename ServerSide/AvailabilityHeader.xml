@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Jobs version="1.6">
+<Jobs version="1.9">
   <Job>
     <ID/>
     <StartTime/>
@@ -11,5 +11,6 @@
     <JobMin/>
     <JobMax/>
     <JobMedian/>
+    <ReferenceTag/>
   </Job>
 </Jobs>
