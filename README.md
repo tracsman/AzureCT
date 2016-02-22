@@ -3,14 +3,22 @@
 # <font color="red">This work is pre-release!<br/>It's close, but still a work in progress!</font>
 
 ## Overview
-This collection of server side web pages and local PowerShell that will generate, collect, store, and display availability statistics of the network between you and a newly built Windows VM in Azure. It will do more in the future, but currently only runs availability tests.
+This collection of server side web pages and local PowerShell that will generate, collect, store, and display availability statistics of the network between you and a newly built Windows VM in Azure. It will do more in the future, but currently only provides availability information.
 
 It is designed to provide an indication, over time, of the link between a Virtual Machine in Azure and an on-premise network. While the focus is on network availability, the test is done from a PC client to an IIS server in Azure. This provides a view into the availability of an end-to-end scenario, not just a single point or component in the complex chain that makes up a VPN or an ExpressRoute network connection. The hope is that this will provide insight into the end-to-end network availability.
 
-This tool **does not** provide rich insight if a problem is encountered during a test, over time this tool will improve but this initial release only reflects the statistics around availability seen while an active test is running.
 ![0]
 
 >**Note**: This tool is not certified by Microsoft, nor is it supported by Microsoft support. Download and use at your own risk. While the author is an employee of Microsoft, this tool is provided as my best effort to provide insight into a customer's connectivity between an on-premise network and an Azure endpoint. See the [Support and Legal Disclaimers](#support-and-legal-disclaimers) below for more info.
+
+## Fast Start
+If you just want to install the toolkit this is a the place to start:
+
+1. Create a new Windows Server Azure VM on an ExpressRoute connected VNet
+2. On the new Azure VM, in an elevated PowerShell Prompt, run the following command:  **(new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/ServerSide/IISBuild.ps1") | Invoke-Expression**
+3. On your local PC run the following command from PowerShell: **(new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/PowerShell/Install-AzureCT.ps1") | Invoke-Expression**
+4. On your local PC you now have the Get-AzureNetworkAvailability command to run availability tests!
+
 
 ## Tool Usage
 ### Prerequisites
@@ -18,17 +26,17 @@ This tool has three perquisite resources that must be in place before using:
 
 1. An Azure virtual network with a VPN or ExpressRoute site-to-site connection to another (usually "on-premise") network.
 2. A newly created Azure Virtual Machine (VM), running Windows Server 2012 or greater, on the Azure VNet that is reachable from the on-premise network. The files and configuration of the Azure VM will be modified, potentially in disruptive ways. To avoid conflicts and/or errors it is important that the Azure VM used is newly built and is a "clean" build, meaning with no other applications or data installed.
-3. A client PC running PowerShell 3.0 or greater on the on-premise network that can reach (via RDP or Remote Desktop) the Azure VM.
+3. A client PC (or server) running PowerShell 3.0 or greater on the on-premise network that can reach (via RDP or Remote Desktop) the Azure VM.
 
 ### Installation Instructions
-1. Local PC Instructions: 
+1. Local PC Instructions:
 	- Install the AzureCT PowerShell module by running the following command in a PowerShell prompt:
 
 		```powershell
 		(new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/PowerShell/Install-AzureCT.ps1") | Invoke-Expression
 		```
-	- This will install four PowerShell cmdlets; Get-AzureNetworkAvailability, Clear-AzureCTHistory, Show-AzureCTResults, and Remove-AzureCT.
-2. Azure VM Instructions: 
+	- This will install a new PowerShell module with six PowerShell cmdlets; Get-AzureNetworkAvailability, Clear-AzureCTHistory, Show-AzureCTResults, Get-HostName, Get-IPTrace, and Remove-AzureCT.
+2. Azure VM Instructions:
 	- Note the IP Address for this Azure VM that was assigned by the VNet, this will be used many times.
 	- Install the web application by running the following command in an elevated PowerShell prompt (ie "Run as Administrator") on the Azure VM.
 
