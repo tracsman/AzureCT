@@ -13,6 +13,7 @@ function Install-AzureCT {
     $FileName += 'Public/Get-AzureNetworkAvailability.ps1'
     $FileName += 'Public/Get-HostName.ps1'
     $FileName += 'Public/Get-IPTrace.ps1'
+    $FileName += 'Public/Get-ServerSideTrace.ps1'
     $FileName += 'Public/Remove-AzureCT.ps1'
     $FileName += 'Public/Show-AzureCTResults.ps1'
     
