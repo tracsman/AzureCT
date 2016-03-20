@@ -145,21 +145,6 @@
            Remove-Job $Job
         }
 
-        # Upload Header, Detail, and Trace xml to server
-        $uri = "http://$RemoteHost/Upload.aspx"
-        $contentType = "multipart/form-data"
-        Try {
-            $header = @{FileID = "ServerTraceHeader"}
-            $HeaderUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $HeaderFile.OuterXml -Headers $header -TimeoutSec 10).Content.Trim()
-
-            $header = @{FileID = "ServerTraceDetail"}
-            $DetailUploadResponse = (Invoke-WebRequest -Uri $uri -ContentType $contentType -Method Post -Body $DetailFile.OuterXml -Headers $header -TimeoutSec 15).Content.Trim()
-        }
-        Catch {
-            $HeaderUploadResponse = "Bad"
-            $DetailUploadResponse = "Bad"
-        }
-
         Write-Host
         If ($HeaderUploadResponse -eq "Good" -and $DetailUploadResponse -eq "Good") {
             Write-Host "Data uploaded to remote server sucessfully"
