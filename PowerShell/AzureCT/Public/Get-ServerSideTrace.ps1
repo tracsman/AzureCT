@@ -44,7 +44,7 @@
     $JobHeader.JobID =[string]$JobID
     $JobHeader.StartTime = [string]$JobStart
     $JobHeader.Target = [string]$RemoteHost.IPAddressToString
-    $HeaderFile.Jobs.AppendChild($JobHeader) | Out-Null
+    $HeaderFile.ServerTraces.AppendChild($JobHeader) | Out-Null
     $HeaderFile.Save($HeaderFileName)
 
     # Job Loop, duration as defined by user input
@@ -78,7 +78,7 @@
                 If ($Node.ID -eq $JobID) {
                     $UpdatedNode = $Node
                     $UpdatedNode.TraceCount = [string]$TraceCount
-                    $HeaderFile.Jobs.ReplaceChild($UpdatedNode, $Node) | Out-Null
+                    $HeaderFile.ServerTraces.ReplaceChild($UpdatedNode, $Node) | Out-Null
                     }}
             $HeaderFile.Save($HeaderFileName)
     
@@ -113,7 +113,7 @@
             If ($node.ID -eq $JobID) {
                 $UpdatedNode = $Node
                 $UpdatedNode.EndTime = [string]$JobEnd
-                $HeaderFile.Jobs.ReplaceChild($UpdatedNode, $Node) | Out-Null
+                $HeaderFile.ServerTraces.ReplaceChild($UpdatedNode, $Node) | Out-Null
                 }
         }
         $HeaderFile.Save($HeaderFileName)
@@ -128,7 +128,7 @@
         $PSJobData = Receive-Job -Job $TraceArray[$Node.CallID - 1]
         ForEach ($TraceRow in $PSJobData) {
             $TraceNode =""
-            $TraceNode = (@($TraceFile.TraceRecords.TraceRecord)[0]).Clone()
+            $TraceNode = (@($DetailFile.TraceRecords.TraceRecord)[0]).Clone()
             $TraceNode.JobID = [string]$TraceRow.JobID
             $TraceNode.TraceID = [string]$TraceRow.CallID
             $TraceNode.HopID = [string]$TraceRow.HopCount
