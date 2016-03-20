@@ -1,6 +1,6 @@
 ﻿# Install-AzureCT Module
 # To kick me off from a URL run the following:
-# (new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/master/PowerShell/Install-AzureCT.ps1") | Invoke-Expression
+# (new-object Net.WebClient).DownloadString("https://github.com/tracsman/AzureCT/raw/vnext/PowerShell/Install-AzureCT.ps1") | Invoke-Expression
 
 function Install-AzureCT {
 

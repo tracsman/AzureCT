@@ -130,7 +130,7 @@
             $TraceNode =""
             $TraceNode = (@($DetailFile.TraceRecords.TraceRecord)[0]).Clone()
             $TraceNode.JobID = [string]$TraceRow.JobID
-            $TraceNode.TraceID = [string]$TraceRow.CallID
+            $TraceNode.TraceID = [string]$TraceRow.TraceID
             $TraceNode.HopID = [string]$TraceRow.HopCount
             $TraceNode.TimeStamp = [string]$TraceRow.TimeStamp
             $TraceNode.Address = [string]$TraceRow.Address
