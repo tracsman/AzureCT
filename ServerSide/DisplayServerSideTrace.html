@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Azure Connectivity Toolkit</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <!--<script type="text/javascript" src="DisplayServerSideTrace.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="DisplayServerSideTrace.css" />
+</head>
+<body>
+    <div><h1>Azure Connectivity Toolkit - ServerSide Trace Display</h1></div>
+    <div>Select an Server Side Trace Job dataset to see details: 
+        <select id="JobList" onchange="PullJobDetails();">
+        </select>
+    </div>
+    Select a trace in the left list to see the details in the right table.<br />
+    <br />
+    <div id="TraceDiv">
+        <div id="SpacerDiv">&nbsp;</div>
+        <div id="HeaderDiv">
+            <select id="HeaderList" size="38">
+            </select>
+        </div>
+        <div id="DetailDiv">
+            <table id="DetailTable">
+                <tr>
+                    <th id="HopID">Hop #</th>
+                    <th id="Address">IP Address</th>
+                    <th id="Latency">Latency</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="MessageDiv">
+        <p>Data Loading</p>
+        <p>Please Wait...</p>
+    </div>
+    <br />
+</body>
+</html>

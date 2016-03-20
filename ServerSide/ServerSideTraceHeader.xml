@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ServerTraces version="1.9">
+  <ServerTrace>
+    <JobID/>
+    <StartTime/>
+    <EndTime/>
+    <Target/>
+    <TraceCount/>
+  </ServerTrace>
+</ServerTraces>
