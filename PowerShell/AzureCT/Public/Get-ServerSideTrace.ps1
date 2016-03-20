@@ -113,7 +113,7 @@
             If ($node.ID -eq $JobID) {
                 $UpdatedNode = $Node
                 $UpdatedNode.EndTime = [string]$JobEnd
-                $HeaderFile.ServerTraces.ReplaceChild($UpdatedNode, $Node) | Out-Null
+                $HeaderFile.ServerTraces.ReplaceChild($UpdatedNode, $UpdatedNode) | Out-Null
                 }
         }
         $HeaderFile.Save($HeaderFileName)

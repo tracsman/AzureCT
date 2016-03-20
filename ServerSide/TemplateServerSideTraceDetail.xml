@@ -2,7 +2,7 @@
 <TraceRecords version="1.9">
   <TraceRecord>
     <JobID/>
-    <CallID/>
+    <TraceID/>
     <HopID/>
     <TimeStamp/>
     <Address/>
