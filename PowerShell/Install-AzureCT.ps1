@@ -4,7 +4,7 @@
 
 function Install-AzureCT {
 
-    $uri = 'https://github.com/tracsman/AzureCT/raw/master/PowerShell/AzureCT/'
+    $uri = 'https://github.com/tracsman/AzureCT/raw/vnext/PowerShell/AzureCT/'
 
     $FileName = @()
     $FileName += 'AzureCT.psd1'
