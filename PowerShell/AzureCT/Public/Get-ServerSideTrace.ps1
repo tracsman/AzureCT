@@ -125,20 +125,21 @@
         }
         
         # Build the Trace File
-        $PSJobData = Receive-Job -Job $TraceArray[$Node.CallID - 1]
-        ForEach ($TraceRow in $PSJobData) {
-            $TraceNode =""
-            $TraceNode = (@($DetailFile.TraceRecords.TraceRecord)[0]).Clone()
-            $TraceNode.JobID = [string]$TraceRow.JobID
-            $TraceNode.TraceID = [string]$TraceRow.CallID
-            $TraceNode.HopID = [string]$TraceRow.HopCount
-            $TraceNode.TimeStamp = [string]$TraceRow.TimeStamp
-            $TraceNode.Address = [string]$TraceRow.Address
-            $TraceNode.TripTime = [string]$TraceRow.RoundTripTime
-            $DetailFile.TraceRecords.AppendChild($TraceNode) | Out-Null
-            $DetailFile.Save($DetailFileName)
-        } # End ForEach $TraceRow
-
+        ForEach ($TraceID in $TraceArray){
+            $PSJobData = Receive-Job -Job $TraceID
+            ForEach ($TraceRow in $PSJobData) {
+                $TraceNode =""
+                $TraceNode = (@($DetailFile.TraceRecords.TraceRecord)[0]).Clone()
+                $TraceNode.JobID = [string]$TraceRow.JobID
+                $TraceNode.TraceID = [string]$TraceRow.CallID
+                $TraceNode.HopID = [string]$TraceRow.HopCount
+                $TraceNode.TimeStamp = [string]$TraceRow.TimeStamp
+                $TraceNode.Address = [string]$TraceRow.Address
+                $TraceNode.TripTime = [string]$TraceRow.RoundTripTime
+                $DetailFile.TraceRecords.AppendChild($TraceNode) | Out-Null
+                $DetailFile.Save($DetailFileName)
+            } # End ForEach $TraceRow
+        }
 
         # Be good and clean up after yourself!
         ForEach ($Job in (Get-Job)) {

@@ -56,18 +56,19 @@ function PullJobDetails() {
                 var dStart = new Date(traceStart);
 
                 // Build Option Row for Drop down
-                myHTMLOutput += '<option value=' + pad(traceID) + '>&nbsp;&nbsp;' + traceID + ' | ' + dateString(dStart, 'mm:ss') + '&nbsp;&nbsp;</option>';
+                myHTMLOutput += '<option value=' + traceID + '>&nbsp;&nbsp;' + pad(traceID) + ' | ' + dateString(dStart, 'hh:mm:ss') + '&nbsp;&nbsp;</option>';
             };
         });
-        myHTMLOutput = '</select>';
+        myHTMLOutput += '</select>';
         // Update the Job List drop down with the HTML string
         $("#HeaderDiv").html(myHTMLOutput);
+
+        // Select last job and call onchange event to load job details
+        document.getElementById("HeaderList").selectedIndex = 0;
+        document.getElementById("HeaderList").onchange();
+        document.getElementById("HeaderList").focus();
     });
     
-    // Select last job and call onchange event to load job details
-    document.getElementById("HeaderList").selectedIndex = 1;
-    document.getElementById("HeaderList").onchange();
-
     // Set Data Loading Message to hidden
     document.getElementById('MessageDiv').style.visibility = 'hidden';
 };
@@ -90,7 +91,6 @@ function PullTrace() {
         myHTMLOutput += '<th id="Address">IP Address</th>';
         myHTMLOutput += '<th id="Latency">Latency</th>';
         myHTMLOutput += '</tr>';
-
 
         // Run the function for each Trace in xml file
         $('TraceRecord', xml).each(function (i) {
@@ -151,8 +151,8 @@ function dateString(dDate, sOption) {
             var fff = ('000' + dDate.getMilliseconds().toString()).substr(-3);
             var sDisplay = yyyy + '-' + (mm[1] ? mm : "0" + mm[0]) + '-' + (dd[1] ? dd : "0" + dd[0]) + ' | ' + (hh[1] ? hh : "0" + hh[0]) + ':' + (MM[1] ? MM : "0" + MM[0]) + ':' + (ss[1] ? ss : "0" + ss[0]) + '.' + fff;
             break;
-        case 'mm:ss':
-            var sDisplay = (MM[1] ? MM : "0" + MM[0]) + ':' + (ss[1] ? ss : "0" + ss[0]);
+        case 'hh:mm:ss':
+            var sDisplay = (hh[1] ? hh : "0" + hh[0]) + ':' + (MM[1] ? MM : "0" + MM[0]) + ':' + (ss[1] ? ss : "0" + ss[0]);
             break;
         default:
             var sDisplay = '';
