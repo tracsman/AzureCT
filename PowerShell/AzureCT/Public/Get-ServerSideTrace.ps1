@@ -113,7 +113,7 @@
             If ($node.ID -eq $JobID) {
                 $UpdatedNode = $Node
                 $UpdatedNode.EndTime = [string]$JobEnd
-                $HeaderFile.ServerTraces.ReplaceChild($UpdatedNode, $UpdatedNode) | Out-Null
+                $HeaderFile.ServerTraces.ReplaceChild($UpdatedNode, $Node) | Out-Null
                 }
         }
         $HeaderFile.Save($HeaderFileName)
@@ -130,7 +130,7 @@
             $TraceNode =""
             $TraceNode = (@($DetailFile.TraceRecords.TraceRecord)[0]).Clone()
             $TraceNode.JobID = [string]$TraceRow.JobID
-            $TraceNode.TraceID = [string]$TraceRow.TraceID
+            $TraceNode.TraceID = [string]$TraceRow.CallID
             $TraceNode.HopID = [string]$TraceRow.HopCount
             $TraceNode.TimeStamp = [string]$TraceRow.TimeStamp
             $TraceNode.Address = [string]$TraceRow.Address

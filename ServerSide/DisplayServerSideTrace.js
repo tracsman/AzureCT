@@ -43,7 +43,7 @@ function PullJobDetails() {
     $.get('ServerSideTraceDetail.xml', {}, function (xml) {
 
         // Define Vars
-        myHTMLOutput = '';
+        myHTMLOutput = '<select id="HeaderList" onchange="PullTrace();" size="38">';
 
         // Run the function for each TraceRecord in xml file
         $('TraceRecord', xml).each(function (i) {
@@ -59,14 +59,14 @@ function PullJobDetails() {
                 myHTMLOutput += '<option value=' + pad(traceID) + '>&nbsp;&nbsp;' + traceID + ' | ' + dateString(dStart, 'mm:ss') + '&nbsp;&nbsp;</option>';
             };
         });
-
+        myHTMLOutput = '</select>';
         // Update the Job List drop down with the HTML string
-        $("#HeaderList").append(myHTMLOutput);
-
-        // Select last job and call onchange event to load job details
-        document.getElementById("HeaderList").selectedIndex = 1;
-        document.getElementById("HeaderList").onchange();
+        $("#HeaderDiv").html(myHTMLOutput);
     });
+    
+    // Select last job and call onchange event to load job details
+    document.getElementById("HeaderList").selectedIndex = 1;
+    document.getElementById("HeaderList").onchange();
 
     // Set Data Loading Message to hidden
     document.getElementById('MessageDiv').style.visibility = 'hidden';
@@ -125,7 +125,6 @@ function PullTrace() {
 
         myHTMLOutput += '</table>';
         $("#DetailDiv").html(myHTMLOutput);
-        document.getElementById('TraceDiv').style.visibility = 'visible';
     });
 
     // Set Data Loading Message to hidden
