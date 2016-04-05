@@ -8,7 +8,8 @@
                   HelpMessage='Enter IP Address of Target Machine')]
        [ipaddress]$RemoteHost,
        [int]$DurationMinutes=1,
-       [int]$SecondsBetweenTracePulls=60
+       [int]$SecondsBetweenTracePulls=60,
+       [string]$RunIPerfClient=$false
     )
 
     # Initialize
@@ -68,6 +69,7 @@
             Try {
                 $TraceArray += Start-Job -ScriptBlock {Get-IPTrace -RemoteHost $args[0] -JobID $args[1] -CallID $args[2]} -Name 'AzureCT.Tracing' -ArgumentList $RemoteHost, $JobID, $TraceCount
                 $TraceDisplay = "!"
+
             }
             Catch {
                 $TraceDisplay ="*"
