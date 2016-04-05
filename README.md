@@ -1,7 +1,5 @@
 # Azure Connectivity Toolkit (AzureCT)
 
-# <font color="red">This work is pre-release!<br/>It's close, but still a work in progress!</font>
-
 ## Overview
 This collection of server side web pages and local PowerShell that will generate, collect, store, and display availability statistics of the network between you and a newly built Windows VM in Azure. It will do more in the future, but currently only provides availability information.
 
